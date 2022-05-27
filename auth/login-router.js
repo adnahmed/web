@@ -20,7 +20,7 @@ router.post(
 
         let roleTable = req.body.role +='s';
 
-        authenticate(req.body.username, req.body.password, roleTable, function(err, payload) {
+        authenticate(req.body.username, req.body.password, roleTable, (err, payload) => {
             if (err) return next(err);
 
             if(payload) {
