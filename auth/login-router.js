@@ -1,5 +1,5 @@
 const express = require('express');
-const { body } = require('express-validator');
+const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const secret = require('../config').secret;
@@ -20,7 +20,7 @@ router.post(
 
         let roleTable = req.body.role +='s';
 
-        authenticate(req.body.username, req.body.password, roleTable, function(err, payload) {
+        authenticate(req.body.username, req.body.password, roleTable, (err, payload) => {
             if (err) return next(err);
 
             if(payload) {
