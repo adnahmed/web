@@ -12,5 +12,8 @@
     "passport": "^0.6.0",
     "pg": "^8.7.3",
     "pg-mem": "^2.4.3"
+  },
+  "devDependencies": {
+    "jest": "^28.1.0"
   }
 }
