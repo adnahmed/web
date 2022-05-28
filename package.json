@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "run": "node index.js"
+    "run": "node index.js",
+    "test": "jest"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
