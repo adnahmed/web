@@ -9,5 +9,5 @@ app.use(morgan('combined'));
 
 app.use('/login',require('./auth/login-router'));
 
-app.listen(3001);
+module.exports = app;
 
