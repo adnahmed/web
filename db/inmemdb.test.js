@@ -1,8 +1,10 @@
 const { expressjwt } = require('express-jwt');
-const { pool, createAndPopulateAdministrators , dropAdministrators}  = require('./inmemdb');
+const { pool }  = require('./inmemdb');
 describe("Test In Memory Database Initialization/Deinitialization", () => {
     beforeAll(() => {
-        createAndPopulateAdministrators();        
+        pool.query("Create table rps.administrators (administrator_id bigserial primary key, username varchar(50) not null unique, password varchar(50) not null)");
+        pool.query("Insert into rps.administrators (username, password) values ('admin12', 'admin1234!!')");   
+        pool.query("Insert into rps.administrators (username, password) values ('admin1', 'admin1234!!')");        
     });
     test('Verify if rps.administrator table is created and populated', async () => {
         let res = await pool.query('Select username, password from rps.administrators');
@@ -19,7 +21,7 @@ describe("Test In Memory Database Initialization/Deinitialization", () => {
     });
 
     afterAll(()=> {
-        dropAdministrators();
+        pool.query("drop table rps.administrators");
     });
 });
 
