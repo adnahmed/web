@@ -2,7 +2,6 @@ const { expressjwt } = require('express-jwt');
 const { pool }  = require('./inmemdb');
 describe("Test In Memory Database Initialization/Deinitialization", () => {
     beforeAll(() => {
-        pool.query("Create table rps.administrators (administrator_id bigserial primary key, username varchar(50) not null unique, password varchar(50) not null)");
         pool.query("Insert into rps.administrators (username, password) values ('admin12', 'admin1234!!')");   
         pool.query("Insert into rps.administrators (username, password) values ('admin1', 'admin1234!!')");        
     });
@@ -21,7 +20,7 @@ describe("Test In Memory Database Initialization/Deinitialization", () => {
     });
 
     afterAll(()=> {
-        pool.query("drop table rps.administrators");
+        pool.query("truncate rps.administrators")
     });
 });
 
