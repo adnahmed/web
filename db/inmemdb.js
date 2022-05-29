@@ -15,4 +15,4 @@ pool.query("Create table rps.administrators (administrator_id bigserial primary 
    username varchar(50) not null unique, password varchar(50) not null)");
 
 
-module.exports = { pool };
+module.exports = pool;
