@@ -1,6 +1,7 @@
 const {newDb} = require('pg-mem');
 const { Pool } = require('pg')
-
+const genericQueries = require('../queries/generic');
+const adminQueries = require('../queries/admin');
 const db = newDb();
 /* Creae rps schema */
 let rps = db.createSchema("rps");
@@ -9,10 +10,8 @@ const {Client} = db.adapters.createPg();
 /* pg-mem pool uses in memory client */
 const pool = new Pool({Client: Client});
 
-/* Create Our Database */
+/* Set search path */
+pool.query(genericQueries.setSearchPathRPS);
 
-pool.query("Create table rps.administrators (administrator_id bigserial primary key, \
-   username varchar(50) not null unique, password varchar(50) not null)");
-
-
+pool.query(adminQueries.createAdministrator);
 module.exports = pool;
