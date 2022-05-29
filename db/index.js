@@ -1,5 +1,10 @@
 const { Pool } = require('pg')
-const pool = new Pool()
-module.exports = {
-  query: (text, params) => pool.query(text, params),
-}
+const genericQueries = require('../queries/generic');
+const adminQueries = require('../queries/admin');
+const config = require('../config');
+const pool = new Pool({
+    connectionString: config.connectionString,
+});
+pool.query(genericQueries.setSearchPathRPS);
+pool.query(adminQueries.createAdministrator);
+module.exports = pool;

@@ -1,34 +1,38 @@
 const { expressjwt } = require('express-jwt');
-const { pool }  = require('./inmemdb');
-describe("Test Database Initialization/Deinitialization", () => {
-    beforeAll(() => {
-        pool.query("Insert into rps.administrators (username, password) values ('admin12', 'admin1234!!')");   
-        pool.query("Insert into rps.administrators (username, password) values ('admin1', 'admin1234!!')");        
-    });
-    test('Verify if rps.administrator table is created and populated', async () => {
-        let res = await pool.query('Select username, password from rps.administrators');
-        expect(res).not.toBeNull();
-        expect(res).not.toBeUndefined();
-    });
+const { pool }  = require('./index');
+const adminQueries = require('../queries/admin');
 
-    test('Verify if row for username admin1 exists in rps.administrators', async () => {
-        let res = await pool.query('Select username, password from rps.administrators where username = $1::text', ["admin1"]);
-        expect(res).not.toBeNull();
-        expect(res).not.toBeUndefined();
-        expect(res.rows[0].username).toBe('admin1')
-        expect(res.rows[0].password).toBe('admin1234!!');
-    });
-
-    afterAll(()=> {
-        pool.query("truncate rps.administrators")
-    });
-});
-
-
-test('Verify if rps.administrators table is dropped properly', async () => {
+describe("Test In Memory Database Initialization/Deinitialization", () => {
+    describe("Test if administrator was populated correctly", () => {
+        beforeAll(() => {
+            pool.query(adminQueries.insertAdministrator, ['admin1', 'admin1234!!']);   
+            pool.query(adminQueries.insertAdministrator, ["adminqw1", "admin123@!"]);       
+        });
+        test('Verify if administrator table is created and populated', async () => {
+            let res = await pool.query(adminQueries.selectUsernamePassword);
+            expect(res).not.toBeNull();
+            expect(res).not.toBeUndefined();
+        });
+    
+        test('Verify if row for username admin1 exists in administrators', async () => {
+            let res = await pool.query(adminQueries.selectUsernamePasswordWhereUsername, ["admin1"]);
+            expect(res).not.toBeNull();
+            expect(res).not.toBeUndefined();
+            expect(res.rows[0].username).toBe('admin1')
+            expect(res.rows[0].password).toBe('admin1234!!');
+        });
+    
+        afterAll(()=> {
+            pool.query(adminQueries.truncateAdministrators);
+        });
+    })
+    test('Verify if administrators table is dropped properly', async () => {
         try{
-            await pool.query('Select username, password from rps.administrators');
+            await pool.query(adminQueries.selectUsernamePassword);
         } catch(err){
             expect(err).not.toBeNull();
-        }
+    }
 });
+});
+
+
