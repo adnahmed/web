@@ -1,6 +1,6 @@
 const { expressjwt } = require('express-jwt');
 const { pool }  = require('./inmemdb');
-describe("Test In Memory Database Initialization/Deinitialization", () => {
+describe("Test Database Initialization/Deinitialization", () => {
     beforeAll(() => {
         pool.query("Insert into rps.administrators (username, password) values ('admin12', 'admin1234!!')");   
         pool.query("Insert into rps.administrators (username, password) values ('admin1', 'admin1234!!')");        
