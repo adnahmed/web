@@ -12,3 +12,5 @@ class Administrator {
         return this;
     }
 }
+
+module.exports = Administrator;
