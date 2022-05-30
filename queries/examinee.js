@@ -8,7 +8,7 @@ const AllQueries = {
     select: {
         administratorUsernamePassword: "select administrator, username, password from examinees",
         usernamePasswordWhereUsername: "Select username, password from examinees where username = $1",
-        administratorUsernamePasswordWhereUsername: "Select username, password from examinees where username = $1",
+        administratorUsernamePasswordWhereUsername: "Select administrator, username, password from examinees where username = $1",
         
     },
     insert: {
