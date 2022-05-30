@@ -7,7 +7,9 @@ const AllQueries = {
     truncateExaminees: "truncate table examinees cascade",
     select: {
         administratorUsernamePassword: "select administrator, username, password from examinees",
-        usernamePasswordWhereUsername: "Select username, password where username = $1",
+        usernamePasswordWhereUsername: "Select username, password from examinees where username = $1",
+        administratorUsernamePasswordWhereUsername: "Select username, password from examinees where username = $1",
+        
     },
     insert: {
         usernamePassword: "insert into examinees (administrator, username, password) values ($1, $2, $3)",
