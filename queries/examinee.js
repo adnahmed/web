@@ -7,11 +7,13 @@ const AllQueries = {
     truncateExaminees: "truncate table examinees cascade",
     select: {
         administratorUsernamePassword: "select administrator, username, password from examinees",
+        usernamePasswordWhereUsername: "Select username, password where username = $1",
     },
     insert: {
         usernamePassword: "insert into examinees (administrator, username, password) values ($1, $2, $3)",
         usernamePasswordReturning: "insert into examinees (administrator, username, password) values ($1, $2, $3) RETURNING *",
+        usernamePasswordName: "insert into examinees (administrator, username, password, first_name, last_name) values ($1, $2, $3, $4, $5)",
         usernamePasswordNameReturning: "insert into examinees (administrator, username, password, first_name, last_name) values ($1, $2, $3, $4, $5) RETURNING *"
-    }
+    },
 };
 module.exports = AllQueries;
