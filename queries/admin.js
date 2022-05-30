@@ -10,7 +10,7 @@ const AllQueries = {
         usernamePasswordWhereUsername: "select username, password from administrators where username = $1::text",
         passwordWhereAdministratorId: "Select password from administrators where administrator_id = $1",
     },
-    truncateAdministrators: "truncate table administrators",
+    truncateAdministrators: "truncate table administrators cascade",
 }
 
 module.exports = AllQueries;
