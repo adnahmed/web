@@ -5,7 +5,8 @@ const AllQueries = {
         administratorUsernamePassword: "select administrator, username, password from examinees",
     },
     insert: {
-        examineeUsernamePassword: "insert into examinees (administerator, username, password) values ($1, $2, $3)"
+        usernamePassword: "insert into examinees (administerator, username, password) values ($1, $2, $3)",
+        usernamePasswordReturning: "insert into examinees (administerator, username, password) values ($1, $2, $3) RETURNING *"
     }
 };
 module.exports = AllQueries;
