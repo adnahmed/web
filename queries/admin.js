@@ -10,7 +10,7 @@ const AllQueries = {
     },
     select : {
         usernamePassword: "select username, password from administrators",
-        usernamePasswordWhereUsername: "select username, password from administrators where username = $1::text",
+        usernamePasswordWhereUsername: "select username, password from administrators where username = $1",
         passwordWhereAdministratorId: "Select password from administrators where administrator_id = $1",
     },
     truncateAdministrators: "truncate table administrators cascade",
