@@ -11,14 +11,14 @@ describe("Test Database Initialization/Deinitialization", () => {
     /* Database must exist before testing insertion/deletion. */
     describe("Test if administrator was populated correctly", () => {
         test('Verify if administrator table is created and populated', async () => {
-            await pool.query(adminQueries.insert.usernamePassword, ["adminqw1", "admin123@!"]);
+            await pool.query(adminQueries.insert.usernamePasswordName, ["adminqw1", "admin123@!", "admin", "admin"]);
             let res = await pool.query(adminQueries.select.usernamePassword);
             expect(res).not.toBeNull();
             expect(res.rows.length).toBe(1);
         });
     
         test('Verify if row for username admin1 exists in administrators', async () => {
-            await pool.query(adminQueries.insert.usernamePassword, ["admin1", "admin123@!"]);
+            await pool.query(adminQueries.insert.usernamePasswordName, ["admin1", "admin123@!", "admin", "admin"]);
             let res = await pool.query(adminQueries.select.usernamePasswordWhereUsername, ["admin1"]);
             expect(res).not.toBeNull();
             expect(res).not.toBeUndefined();
