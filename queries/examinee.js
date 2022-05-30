@@ -10,7 +10,8 @@ const AllQueries = {
     },
     insert: {
         usernamePassword: "insert into examinees (administrator, username, password) values ($1, $2, $3)",
-        usernamePasswordReturning: "insert into examinees (administrator, username, password) values ($1, $2, $3) RETURNING *"
+        usernamePasswordReturning: "insert into examinees (administrator, username, password) values ($1, $2, $3) RETURNING *",
+        usernamePasswordNameReturning: "insert into examinees (administrator, username, password, first_name, last_name) values ($1, $2, $3, $4, $5) RETURNING *"
     }
 };
 module.exports = AllQueries;
