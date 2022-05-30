@@ -2,10 +2,11 @@ const AllQueries = {
   createProctor:
     "create table if not exists proctors (\
         administrator bigint references administrators(administrator_id), \
-        username text not null unique,\
+        username text not null,\
         password text not null,\
         first_name varchar(255) not null, last_name varchar(255) not null, \
-        name text generated always as (first_name || ' ' || last_name) stored\
+        name text generated always as (first_name || ' ' || last_name) stored,\
+        primary key (administrator, username)\
         )",
     select: {
       administratorUsernamePasswordWhereUsername: "Select administrator, username, password from proctors where username = $1"
