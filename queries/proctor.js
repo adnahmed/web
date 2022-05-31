@@ -14,6 +14,9 @@ const AllQueries = {
     insert: {
       usernamePasswordNameReturning: "insert into proctors (administrator, username, password, first_name, last_name) values ($1, $2, $3, $4, $5) RETURNING *"
     },
+    delete: {
+      whereUsernameAndAdministratorReturning: "delete from proctors where (username, administrator) = ($1 ,$2) returning username, name"
+    },
     truncateProctors:
         "truncate table proctors cascade",
 };

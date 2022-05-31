@@ -28,5 +28,8 @@ const AllQueries = {
     usernamePasswordNameReturning:
       "insert into examinees (administrator, username, password, first_name, last_name) values ($1, $2, $3, $4, $5) RETURNING *",
   },
+  delete: {
+    whereUsernameAndAdministratorReturning: "delete from examinees where (username, administrator) = ($1 ,$2) returning username, name"
+  }
 };
 module.exports = AllQueries;
