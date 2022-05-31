@@ -1,13 +1,14 @@
 const AllQueries = {
   createProctor:
     "create table if not exists proctors (\
-        administrator bigint references administrators(administrator_id), \
+        administrator bigint references administrators(administrator_id) on delete cascade, \
         username text not null,\
         password text not null,\
         first_name varchar(255) not null, last_name varchar(255) not null, \
         name text generated always as (first_name || ' ' || last_name) stored,\
         primary key (administrator, username)\
         )",
+    dropProctor: "drop table if exists proctors cascade",
     select: {
       administratorUsernamePasswordWhereUsername: "Select administrator, username, password from proctors where username = $1"
     },
