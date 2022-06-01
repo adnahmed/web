@@ -13,11 +13,12 @@ const AllQueries = {
     },
     select : {
         usernamePassword: "select username, password from administrators",
-        usernamePasswordWhereUsername: "select username, password from administrators where username = $1",
+        idUsernamePasswordWhereUsername: "select administrator_id,username, password from administrators where username = $1",
         passwordWhereAdministratorId: "Select password from administrators where administrator_id = $1",
     },
     delete: {
-        whereUsername: "delete from administrators where username = $1 returning username"
+        whereUsername: "delete from administrators where username = $1 returning username",
+        whereAdministratorId: "delete from administrators where administrator_id = $1 returning username"
     },
     truncateAdministrators: "truncate table administrators cascade",
     dropAdministrator: "drop table if exists administrators cascade"

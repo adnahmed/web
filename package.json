@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "run": "node index.js",
+    "run": "node server.js",
     "test": "jest"
   },
   "dependencies": {
