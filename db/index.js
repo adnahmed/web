@@ -1,9 +1,14 @@
-const { Pool } = require('pg')
-const genericQueries = require('../queries/generic');
-const adminQueries = require('../queries/admin');
-const config = require('../config');
-const pool = new Pool({
-    connectionString: config.connectionString,
-});
+const { Sequelize } = require("sequelize");
+const { db } = require("../config");
+const sequelize = new Sequelize(db.connectionString); // Example for postgres
 
-module.exports = pool;
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("Connection has been established successfully.");
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
+  await sequelize.sync();
+})();
+module.exports = sequelize;

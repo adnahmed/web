@@ -1,31 +1,48 @@
-class Examinee {
-    constructor(administrator, username, password, first_name, last_name){
-        this.administrator = administrator;
-        this.username = username;
-        this.password = password;
-        this.first_name = first_name;
-        this.last_name = last_name;
-    }
-    administrator(newadministrator) {
-        this.administrator = newadministrator;
-        return this;
-    }
-    first_name(newFirstName) {
-        this.first_name = newFirstName;
-        return this;
-    }
-    last_name(newLastName) {
-        this.last_name = newLastName;
-        return this;
-    }
-    username(newusername) {
-        this.username = newusername;
-        return this;
-    }
-    password(newpassword) {
-        this.password = newpassword;
-        return this;
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../db/index');
+const Administrator = require('./administrator');
+class Examinee extends Model { 
+    getFullname() {
+        return [this.first_name, this.last_name].join(' ');
     }
 }
+Examinee.init({
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
+    first_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: true,
+        }
+    },
+    last_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: true,
+        }
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: true,
+        }
+    },
+}, {
+    sequelize,
+    modelName: 'examinee',
+    timestamps: false,
+});
+
 
 module.exports = Examinee;
