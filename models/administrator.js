@@ -53,12 +53,13 @@ Administrator.belongsToMany(Examinee, {
 });
 Administrator.belongsToMany(Proctor, {
   through: "administrator_proctor",
-  as: 'administrator'
 });
+
 Examinee.belongsToMany(Administrator, {
   through: 'administrator_examinee',
   as: 'examinee'
 });
+
 Proctor.belongsToMany(Administrator, {
   through: 'administrator_proctor',
   as: 'proctor'
