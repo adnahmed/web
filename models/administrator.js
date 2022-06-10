@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   
     static associate(models) {
-      Administrator.hasMany(models.Examinee);
-      Administrator.hasMany(models.Proctor);
+      Administrator.hasMany(models['examinee']);
+      Administrator.hasMany(models['proctor']);
     }
   }
 

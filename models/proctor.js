@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
             return [this.first_name, this.last_name].join(' ');
         }
         static associate(models) {
-            Proctor.belongsTo(models.Administrator);
+            Proctor.belongsTo(models['administrator']);
         }
     }
     Proctor.init({

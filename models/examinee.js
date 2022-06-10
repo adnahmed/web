@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
             return [this.first_name, this.last_name].join(' ');
         }
         static associate(models) {
-            Examinee.belongsTo(models.Administrator);
+            Examinee.belongsTo(models['administrator']);
         }
     }
     Examinee.init({
