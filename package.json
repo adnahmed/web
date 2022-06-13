@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "run": "node server.js",
+    "start": "cd src && sequelize db:migrate && sequelize db:seed:all && node ../server.js",
     "test": "jest"
   },
   "dependencies": {
