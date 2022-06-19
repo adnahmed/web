@@ -11,8 +11,8 @@ const Sequelize = require("sequelize");
 
 const info = {
   revision: 1,
-  name: "noname",
-  created: "2022-06-10T08:01:29.029Z",
+  name: "user-models",
+  created: "2022-06-19T12:25:24.047Z",
   comment: "",
 };
 
@@ -23,9 +23,10 @@ const migrationCommands = (transaction) => [
       "administrators",
       {
         id: {
-          type: Sequelize.UUIDV4,
+          type: Sequelize.UUID,
           field: "id",
           primaryKey: true,
+          defaultValue: Sequelize.UUIDV4,
         },
         username: {
           type: Sequelize.STRING,
@@ -58,9 +59,10 @@ const migrationCommands = (transaction) => [
       "examinees",
       {
         id: {
-          type: Sequelize.UUIDV4,
+          type: Sequelize.UUID,
           field: "id",
           primaryKey: true,
+          defaultValue: Sequelize.UUIDV4,
         },
         username: {
           type: Sequelize.STRING,
@@ -83,7 +85,7 @@ const migrationCommands = (transaction) => [
           allowNull: false,
         },
         administratorId: {
-          type: Sequelize.UUIDV4,
+          type: Sequelize.UUID,
           field: "administratorId",
           onUpdate: "CASCADE",
           onDelete: "SET NULL",
@@ -100,9 +102,10 @@ const migrationCommands = (transaction) => [
       "proctors",
       {
         id: {
-          type: Sequelize.UUIDV4,
+          type: Sequelize.UUID,
           field: "id",
           primaryKey: true,
+          defaultValue: Sequelize.UUIDV4,
         },
         username: {
           type: Sequelize.STRING,
@@ -125,7 +128,7 @@ const migrationCommands = (transaction) => [
           allowNull: false,
         },
         administratorId: {
-          type: Sequelize.UUIDV4,
+          type: Sequelize.UUID,
           field: "administratorId",
           onUpdate: "CASCADE",
           onDelete: "SET NULL",

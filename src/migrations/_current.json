@@ -131,6 +131,6 @@
     },
     "path": "/Users/adnankhan/Desktop/Desktop/Projects/finalproject/nodejs-backend/src/migrations/_current.json",
     "backupPath": "/Users/adnankhan/Desktop/Desktop/Projects/finalproject/nodejs-backend/src/migrations/_current_bak.json",
-    "exists": true,
-    "revision": 2
+    "exists": false,
+    "revision": 1
 }
