@@ -23,9 +23,8 @@ const migrationCommands = (transaction) => [
       "administrators",
       {
         id: {
-          type: Sequelize.INTEGER,
+          type: Sequelize.UUIDV4,
           field: "id",
-          autoIncrement: true,
           primaryKey: true,
         },
         username: {
@@ -59,9 +58,8 @@ const migrationCommands = (transaction) => [
       "examinees",
       {
         id: {
-          type: Sequelize.INTEGER,
+          type: Sequelize.UUIDV4,
           field: "id",
-          autoIncrement: true,
           primaryKey: true,
         },
         username: {
@@ -85,7 +83,7 @@ const migrationCommands = (transaction) => [
           allowNull: false,
         },
         administratorId: {
-          type: Sequelize.INTEGER,
+          type: Sequelize.UUIDV4,
           field: "administratorId",
           onUpdate: "CASCADE",
           onDelete: "SET NULL",
@@ -102,9 +100,8 @@ const migrationCommands = (transaction) => [
       "proctors",
       {
         id: {
-          type: Sequelize.INTEGER,
+          type: Sequelize.UUIDV4,
           field: "id",
-          autoIncrement: true,
           primaryKey: true,
         },
         username: {
@@ -128,7 +125,7 @@ const migrationCommands = (transaction) => [
           allowNull: false,
         },
         administratorId: {
-          type: Sequelize.INTEGER,
+          type: Sequelize.UUIDV4,
           field: "administratorId",
           onUpdate: "CASCADE",
           onDelete: "SET NULL",
