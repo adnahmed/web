@@ -1,14 +1,14 @@
-
-const Administrator = require('../models/administrator');
-const Examinee = require('../models/examinee');
-const Proctor = require('../models/proctor');
+// TODO: Use error library and move warning logging to over there.
 const logger = require('../logger/index');
 const jwt = require("jsonwebtoken");
 const config = require("../config");
 const bcrypt = require("bcrypt");
+const Sequelize = require('sequelize');
 class AuthenticationError extends Error {}
 class JWTError extends Error {}
-
+const db = require('../models/index');
+const { Op } = require('sequelize')
+const { sequelize } = require('../models/index');
 class Authenticator {
   constructor(pool) {
     this.pool = pool;
@@ -31,30 +31,23 @@ class Authenticator {
   async registerAdministrator(username, password, first_name, last_name) {
     try {
       password = await Authenticator.encryptPayload(password);
-      await Administrator.create({username: username, password: password, first_name: first_name, last_name: last_name});  
+      await db['administrator'].create({username: username, password: password, first_name: first_name, last_name: last_name});  
       logger.log(
         "info",
         `Administrator ${username} registered successfully`
       );
     } catch(err) {
       logger.warn(`Administrator ${username} not registered successfully`);
+      if (err instanceof Sequelize.UniqueConstraintError)
+        throw new AuthenticationError("Administrator already exists.");
       throw new AuthenticationError(err);
     }
   }
 
 
 
-  async registerProctor(adminId, username, password, first_name, last_name) {
+  async registerProctor(administrator, username, password, first_name, last_name) {
     try {
-      let administrator = await Administrator.findOne({
-        where: {
-          id: adminId
-        }
-      });
-      if (!administrator) {
-        logger.warn(`Administrator ${adminId} not found, cannot register proctor`);
-        throw new AuthenticationError("Administrator not found");
-      }
       password = await Authenticator.encryptPayload(password);
       await administrator.createProctor({
         username: username,
@@ -68,19 +61,15 @@ class Authenticator {
       );
     }
     catch(err) {
-      logger.warn(`Proctor ${username} not registered successfully`);
+      logger.warn(`Proctor ${username} not registered successfully, error: ${err}`);
+      if (err instanceof Sequelize.UniqueConstraintError) 
+        throw new AuthenticationError("Proctor already registered.")
       throw new AuthenticationError(err);
     }
   }
 
-  async registerExaminee(adminId, username, password, first_name, last_name) {
+  async registerExaminee(administrator, username, password, first_name, last_name) {
     try{
-      let administrator = await Administrator.findOne({
-        where: { id: adminId }
-      });
-      if (!administrator) {
-        throw new AuthenticationError("Administrator not found");
-      }
       password = await Authenticator.encryptPayload(password);
       await administrator.createExaminee({
         username: username,
@@ -93,69 +82,68 @@ class Authenticator {
         "info",
         `Examinee ${username} registered successfully`
       );
-    } catch(err) {
+    }
+    catch(err) {
       logger.warn(
-        `Examinee ${username} not registered successfully`
+        `Examinee ${username} not registered successfully, error: ${err}`
       )
-      throw AuthenticationError(err);
+      if(err instanceof Sequelize.UniqueConstraintError)
+        throw new AuthenticationError("Examinee already registered.");
+      throw new AuthenticationError(err);
     }
   }
 
-  async unregisterExaminee(adminId, id) {
+  async unregisterExaminee(administrator, username) {
     try {
-      const administrator = await Administrator.findOne({
-      where: { id: adminId }
-    });
-    if (!administrator) {
-      throw new AuthenticationError("Administrator not found");
-    }
-    await administrator.destroyExaminee({
-      id: id
-    });
-    logger.log("info", `Examinee ${examinee.username} unregistered successfully`);
+      let examinees = await administrator.getExaminees({
+        where: {
+          username: username
+        }
+      });
+      await administrator.removeExaminee(examinees);
+      if(examinees.length == 0) {
+        throw new AuthenticationError("Examinee not Found")
+      }
+      examinees[0].destroy();
+    logger.log("info", `Examinee ${username} unregistered successfully`);
     } catch(err) {
       logger.warn(
-        `Examinee ${examinee.username} not unregistered successfully`
+        `Examinee ${username} not unregistered successfully, error: ${err}`
       )
-      throw AuthenticationError(err);
+      throw new AuthenticationError(err);
     }
   }
-  async unregisterProctor(adminId, id) {
+  async unregisterProctor(administrator, username) {
     try {
-      const administrator = await Administrator.findOne({
-        where: { id: adminId }
-      });
-      if (!administrator) {
-        throw new AuthenticationError("Administrator not found");
+      let proctor = await administrator.getProctors({
+        where: {
+          username: username
+        }
+      })
+
+      await administrator.removeProctor(proctor);
+      if(proctor.length == 0) {
+        throw new AuthenticationError("Proctor not Found")
       }
-      await administrator.destroyProctor({
-        id: id
-      });
-      logger.log("info", `Proctor ${proctor.username} unregistered successfully`);
+      proctor[0].destroy();
+      logger.log("info", `Proctor ${username} unregistered successfully`);
     } catch(err) {
       logger.warn(
-        `Proctor ${proctor.username} not unregistered successfully`
+        `Proctor ${username} not unregistered. error: ${err}`
       )
-      throw AuthenticationError(err);
+      throw new AuthenticationError(err);
     }
   }
   
-  async unregisterAdministrator(id) {
+  async unregisterAdministrator(administrator) {
     try {
-      const administrator = await Administrator.findOne({
-      where: { id: id }
-    });
-    if (!administrator) {
-      logger.warn(`Administrator ${username} not found, cannot unregister`);
-      throw new AuthenticationError("Administrator not found");
-    }
     await administrator.destroy();
-    logger.log("info", `Administrator ${username} unregistered successfully`);
+    logger.log("info", `Administrator ${administrator.username} unregistered successfully`);
   } catch(err) {
     logger.warn(
-      `Administrator ${username} not unregistered successfully`
+      `Administrator ${administrator.username} not unregistered, error: ${err}`
     )
-    throw AuthenticationError(err);
+    throw new AuthenticationError(err);
   }
 }
 
@@ -169,7 +157,7 @@ class Authenticator {
   }
 
   async loginProctor(username, password) {
-      let proctor = await Proctor.findOne({
+      let proctor = await db['proctor'].findOne({
         where: { username: username }
       });
       if (!proctor) {
@@ -186,14 +174,13 @@ class Authenticator {
         `Proctor ${username} logged in successfully`
       );
      let payload = {
-      id: proctor.id,
-      role: "proctor"
+      sub: proctor.id,
     }
       return Authenticator.createToken(payload);
   }
 
   async loginExaminee(username, password) {
-    let examinee = await Examinee.findOne({
+    let examinee = await db['examinee'].findOne({
       where: { username: username }
     });
     if (!examinee) {
@@ -211,14 +198,13 @@ class Authenticator {
     );
 
     let payload = {
-      id: examinee.id,
-      role: "examinee"
+      sub: examinee.id,
     }
     return Authenticator.createToken(payload);
   }
 
   async loginAdministrator(username, password) {
-    let administrator = await Administrator.findOne({
+    let administrator = await db['administrator'].findOne({
       where: { username: username }
     });
     if (!administrator) {
@@ -235,11 +221,11 @@ class Authenticator {
       `Administrator ${username} logged in successfully`
     );
     let payload = {
-      id: administrator.id,
-      role: "administrator"
+      sub: administrator.id,
     }
     return Authenticator.createToken(payload);
   }
-  static defaultAuthenticator = new Authenticator (require("../db/index"));
+
+  static defaultAuthenticator = new Authenticator (sequelize);
 }
 module.exports = Authenticator;

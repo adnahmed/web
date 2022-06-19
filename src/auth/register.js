@@ -2,7 +2,7 @@ const express = require("express");
 const Authenticator = require("../lib/Authenticator");
 const { body, validationResult } = require("express-validator");
 const defaultAuthenticator = Authenticator.defaultAuthenticator;
-const auth = require('../lib/expressjwt-auth');
+const passport = require('../lib/passportjwt-auth');
 var router = express.Router();
 
 router.post(
@@ -29,10 +29,9 @@ router.post(
       return res.status(422).json({ errors: errors.array() });
     try {
       await defaultAuthenticator.registerAdministrator(req.body.username, req.body.password, req.body.first_name, req.body.last_name);
-      let token = await defaultAuthenticator.loginAdministrator(req.body.username, req.body.password);
-      res.status(200).send(token);
+      res.status(200).send("Administrator registered.");
     } catch(err) {
-      res.status(401).send("Administrator already exists.");
+      res.status(401).send(err.message);
     }
   }
 );
@@ -55,16 +54,16 @@ router.post(
       .isLength({ min: 1 })
       .trim()
       .withMessage("Last Name is required"),
-    auth.required,
+    passport.authenticate('administrator', { session: false }),
     async (req, res, next) => {
       const errors = validationResult(req);
       if (!errors.isEmpty())
         return res.status(422).json({ errors: errors.array() });
       try {
-        await defaultAuthenticator.registerProctor(req.auth.id, req.body.username, req.body.password, req.body.first_name, req.body.last_name);
+        await defaultAuthenticator.registerProctor(req.user, req.body.username, req.body.password, req.body.first_name, req.body.last_name);
         res.status(200).send("Proctor registered.");
       } catch (err) {
-        res.status(401).send(err);
+        res.status(401).send(err.message);
       }
     }
   );
@@ -89,14 +88,14 @@ router.post(
       .isLength({ min: 1 })
       .trim()
       .withMessage("Last Name is required"),
-    auth.required,
+      passport.authenticate('administrator', { session: false }),
     async (req, res, next) => {
       const errors = validationResult(req);
       if (!errors.isEmpty())
         return res.status(422).json({ errors: errors.array() 
       });
       try {
-        await defaultAuthenticator.registerExaminee(req.auth.id,req.body.username, req.body.password, req.body.first_name, req.body.last_name);
+        await defaultAuthenticator.registerExaminee(req.user,req.body.username, req.body.password, req.body.first_name, req.body.last_name);
         res.status(200).send("Examinee registered.")
       } catch (err) {
         res.status(401).send(err.message);

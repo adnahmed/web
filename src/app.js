@@ -1,6 +1,5 @@
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-//const loginRouter = require('./auth/login');
 const express = require('express');
 const app = express();
 const login = require('./auth/login');
