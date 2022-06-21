@@ -5,6 +5,7 @@
         "test": "jest"
     },
     "dependencies": {
+        "@graphql-tools/load-files": "^6.5.4",
         "apollo-server": "^3.9.0",
         "apollo-server-express": "^3.9.0",
         "bcrypt": "^5.0.1",
