@@ -1,9 +1,6 @@
 const express = require("express");
 const Authenticator = require("../lib/Authenticator");
 const { body, validationResult } = require("express-validator");
-const Administrator = require("../models/administrator");
-const Proctor = require("../models/proctor");
-const Examinee = require('../models/examinee');
 const defaultAuthenticator = Authenticator.defaultAuthenticator;
 
 var router = express.Router();
