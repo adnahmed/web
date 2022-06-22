@@ -1,0 +1,10 @@
+type Exam {
+    id: UUID!
+    name: String! 
+    papers: [Papers!]!
+    startDate: Date!
+    endDate: Date!
+    groups: [Group!]
+    examinees: [Examinee!]!
+    proctor: [Proctor!]!
+}
