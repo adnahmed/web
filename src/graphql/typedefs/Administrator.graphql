@@ -1,0 +1,6 @@
+type Administrator {
+    id: UUID!
+    first_name: String!
+    last_name: String!
+    name: String!
+}

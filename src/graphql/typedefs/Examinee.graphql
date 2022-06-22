@@ -1,0 +1,9 @@
+type Examinee {
+    id: UUID!
+    first_name: String!
+    last_name: String!
+    name: String!
+    groups: [Group]
+    #completedExams: [Exam!]
+    completedPaper: [Paper!]
+}

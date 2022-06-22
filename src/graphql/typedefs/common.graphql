@@ -1,0 +1,34 @@
+type Group {
+    name: String! 
+}
+
+type Subject {
+    id: UUID!
+    name: String! 
+}
+type Book {
+    author: String
+    title: String
+}
+type Query {
+"""
+    examinees: [Examinee]
+    proctors: [Proctor]
+    exams: [Exam]
+    papers: [Paper]
+    mcqPapers: [multipleChoicePapers]
+    mcqQuestions: [MutipleChoiceQuestion]
+    pdfPapers: [PdfPaper]
+    groups: [Group]
+    subjects: [Subject]
+"""
+    books: [Book]
+}
+
+interface MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+}
+
+

@@ -8,8 +8,12 @@ const path = require('path');
 
 module.exports = (async()=> {
 const server = new ApolloServer({
-  typeDefs: print(await loadFiles(path.join(__dirname, './typedefs/**/*.graphql'))) + scalarTypeDefs,
-  resolvers: {...mergeResolvers(await loadFiles(path.join(__dirname,'./resolvers/**/*.js'))), ...scalarResolvers},
+  resolvers: {
+    ...mergeResolvers(await loadFiles(path.join(__dirname,'./resolvers/**/*.js'))),
+    ...scalarResolvers},
+  typeDefs: 
+    print(await loadFiles(path.join(__dirname, './typedefs/**/*.graphql'))) +
+    scalarTypeDefs,
   csrfPrevention: true,
   cache: "bounded",
 }); 

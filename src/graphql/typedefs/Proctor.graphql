@@ -1,0 +1,9 @@
+type Proctor {
+    id: ID!
+    first_name: String!
+    last_name: String!
+    name: String!
+    groups: [Group]
+    #conductedExams: [Exam!]
+    conductedPapers: [Paper!]
+}

@@ -1,7 +1,7 @@
 type Exam {
     id: UUID!
     name: String! 
-    papers: [Papers!]!
+    papers: [Paper!]!
     startDate: Date!
     endDate: Date!
     groups: [Group!]
