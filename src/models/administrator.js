@@ -6,7 +6,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Administrator extends Model {
     getFullname() {
-      return [this.first_name, this.last_name].join(" ");
+      return [this.first_name, this.middle_name, this.last_name].join(" ");
     }
   
     static associate(models) {
@@ -40,6 +40,13 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           notEmpty: true,
         },
+        middle_name: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          validate: {
+            notEmpty: true,
+          },
+        }
       },
       password: {
         type: DataTypes.STRING,
