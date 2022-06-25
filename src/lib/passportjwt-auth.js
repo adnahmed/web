@@ -41,7 +41,7 @@ passport.use('proctor', new JWTStrategy(opts, async function(jwt_payload, done) 
         
         logger.log(
         "info",
-        `Proctor ${username} was authorized`
+        `Proctor ${proctor.username} was authorized`
       );
         return done(null, proctor);
     } catch (err) {
@@ -62,9 +62,9 @@ passport.use('examinee', new JWTStrategy(opts, async function(jwt_payload, done)
         
         logger.log(
         "info",
-        `Examinee ${username} was authorized`
+        `Examinee ${examinee.username} was authorized`
       );
-        return done(null, examinee);
+        return done(null, examinee, jwt_payload.role);
     } catch (err) {
         logger.warn(`Examinee not authorized, error: ${err}`);
         return done(err, false);

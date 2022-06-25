@@ -7,7 +7,6 @@ const Sequelize = require('sequelize');
 class AuthenticationError extends Error {}
 class JWTError extends Error {}
 const db = require('../models/index');
-const { Op } = require('sequelize')
 const { sequelize } = require('../models/index');
 class Authenticator {
   constructor(pool) {
@@ -175,6 +174,7 @@ class Authenticator {
       );
      let payload = {
       sub: proctor.id,
+      role: 'proctor'
     }
       return Authenticator.createToken(payload);
   }
@@ -199,6 +199,7 @@ class Authenticator {
 
     let payload = {
       sub: examinee.id,
+      role: 'examinee'
     }
     return Authenticator.createToken(payload);
   }
@@ -222,6 +223,7 @@ class Authenticator {
     );
     let payload = {
       sub: administrator.id,
+      role: 'administrator'
     }
     return Authenticator.createToken(payload);
   }
