@@ -118,8 +118,7 @@ class Authenticator {
         where: {
           username: username
         }
-      })
-
+      });
       await administrator.removeProctor(proctor);
       if(proctor.length == 0) {
         throw new AuthenticationError("Proctor not Found")
@@ -155,79 +154,35 @@ class Authenticator {
     });
   }
 
-  async loginProctor(username, password) {
-      let proctor = await db['proctor'].findOne({
-        where: { username: username }
-      });
-      if (!proctor) {
-        logger.warn(`Proctor ${username} not found, cannot login`);
-        throw new AuthenticationError("Proctor not found");
-      }
-      let res = await this.verifyPassword(password, proctor.password);
-      if (!res) {
-        logger.warn(`Proctor ${username} not logged in successfully`);
-        throw new AuthenticationError("Invalid password");
-      }
-      logger.log(
-        "info",
-        `Proctor ${username} logged in successfully`
+  async loginUser(username, password, role) {
+    if(!['administrator', 'examinee', 'proctor'].includes(role))
+      throw new AuthenticationError("Unknown Role Provided!");
+
+    let user = await db[role].findOne({
+      where: { username: username }
+    });
+
+    if (!user) {
+      logger.warn(`${role} ${username} not found, cannot login`);
+      throw new AuthenticationError(`${role} not found`);
+    }
+    let res = await this.verifyPassword(password, user.password);
+    if (!res) {
+      logger.warn(`${role} ${username} not logged in successfully, invalid password`);
+      throw new AuthenticationError("Invalid password");
+    }
+    logger.log(
+      "info",
+      `${role} ${username} logged in successfully`
       );
-     let payload = {
-      sub: proctor.id,
-      role: 'proctor'
-    }
-      return Authenticator.createToken(payload);
-  }
-
-  async loginExaminee(username, password) {
-    let examinee = await db['examinee'].findOne({
-      where: { username: username }
-    });
-    if (!examinee) {
-      logger.warn(`Examinee ${username} not found, cannot login`);
-      throw new AuthenticationError("Examinee not found");
-    }
-    let res = await this.verifyPassword(password, examinee.password);
-    if (!res) {
-      logger.warn(`Examinee ${username} not logged in successfully`);
-      throw new AuthenticationError("Invalid password");
-    }
-    logger.log(
-      "info",
-      `Examinee ${username} logged in successfully`
-    );
-
     let payload = {
-      sub: examinee.id,
-      role: 'examinee'
+      sub: user.id,
+      role: role
     }
     return Authenticator.createToken(payload);
   }
 
-  async loginAdministrator(username, password) {
-    let administrator = await db['administrator'].findOne({
-      where: { username: username }
-    });
-    if (!administrator) {
-      logger.warn(`Administrator ${username} not found, cannot login`);
-      throw new AuthenticationError("Administrator not found");
-    }
-    let res = await this.verifyPassword(password, administrator.password);
-    if (!res) {
-      logger.warn(`Administrator ${username} not logged in successfully`);
-      throw new AuthenticationError("Invalid password");
-    }
-    logger.log(
-      "info",
-      `Administrator ${username} logged in successfully`
-    );
-    let payload = {
-      sub: administrator.id,
-      role: 'administrator'
-    }
-    return Authenticator.createToken(payload);
-  }
-
+  
   static defaultAuthenticator = new Authenticator (sequelize);
 }
 module.exports = Authenticator;

@@ -24,7 +24,19 @@ type Query {
 """
     books: [Book]
 }
+type Query {
+    allBooks: String
+}
+type Mutation {
+    changeBook(title:String, newTitle:String) : ChangeBookMutationResponse
+}
 
+type ChangeBookMutationResponse implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    book: Book!
+}
 interface MutationResponse {
   code: String!
   success: Boolean!

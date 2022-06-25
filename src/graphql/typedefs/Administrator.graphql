@@ -1,6 +1,10 @@
-type Administrator {
+type Administrator implements User {
     id: UUID!
-    first_name: String!
-    last_name: String!
-    name: String!
+    first_name: String
+    middle_name: String
+    last_name: String
+}
+
+type Query {
+    getAdministrator: Administrator
 }

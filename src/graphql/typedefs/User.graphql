@@ -1,0 +1,23 @@
+interface User {
+    id: UUID!
+    first_name: String
+    middle_name: String
+    last_name: String
+}
+
+interface AuthenticationResponse {
+    code: Int!
+    message: String!
+    success: Boolean!
+}
+
+type LoginResponse implements AuthenticationResponse {
+    code: Int!
+    message: String!
+    success: Boolean!
+    token: String
+}
+
+type Query {
+    loginUser(username: String!, password: String!, role: String!): LoginResponse
+}
