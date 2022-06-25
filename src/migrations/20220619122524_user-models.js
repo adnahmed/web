@@ -100,7 +100,7 @@ const migrationCommands = (transaction) => [
           onUpdate: "CASCADE",
           onDelete: "SET NULL",
           references: { model: "administrators", key: "id" },
-          allowNull: true,
+          allowNull: false,
         },
       },
       { transaction },
@@ -130,12 +130,10 @@ const migrationCommands = (transaction) => [
         middle_name: {
           type: Sequelize.STRING,
           field: "last_name",
-          allowNull: false,
         },
         last_name: {
           type: Sequelize.STRING,
           field: "last_name",
-          allowNull: false,
         },
         password: {
           type: Sequelize.STRING,
@@ -148,7 +146,7 @@ const migrationCommands = (transaction) => [
           onUpdate: "CASCADE",
           onDelete: "SET NULL",
           references: { model: "administrators", key: "id" },
-          allowNull: true,
+          allowNull: false,
         },
       },
       { transaction },

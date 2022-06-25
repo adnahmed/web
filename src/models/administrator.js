@@ -36,13 +36,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       last_name: {
         type: DataTypes.STRING,
-        allowNull: false,
         validate: {
           notEmpty: true,
         },
         middle_name: {
           type: DataTypes.STRING,
-          allowNull: false,
           validate: {
             notEmpty: true,
           },
