@@ -23,8 +23,13 @@
                     "field": "first_name",
                     "seqType": "Sequelize.STRING"
                 },
+                "middle_name": {
+                    "allowNull": true,
+                    "field": "middle_name",
+                    "seqType":"Sequelize.STRING"
+                },
                 "last_name": {
-                    "allowNull": false,
+                    "allowNull": true,
                     "field": "last_name",
                     "seqType": "Sequelize.STRING"
                 },
@@ -58,8 +63,13 @@
                     "field": "first_name",
                     "seqType": "Sequelize.STRING"
                 },
+                "middle_name": {
+                    "allowNull": true,
+                    "field": "middle_name",
+                    "seqType":"Sequelize.STRING"
+                },
                 "last_name": {
-                    "allowNull": false,
+                    "allowNull": true,
                     "field": "last_name",
                     "seqType": "Sequelize.STRING"
                 },
@@ -104,8 +114,13 @@
                     "field": "first_name",
                     "seqType": "Sequelize.STRING"
                 },
+                "middle_name": {
+                    "allowNull": true,
+                    "field": "middle_name",
+                    "seqType":"Sequelize.STRING"
+                },
                 "last_name": {
-                    "allowNull": false,
+                    "allowNull": true,
                     "field": "last_name",
                     "seqType": "Sequelize.STRING"
                 },

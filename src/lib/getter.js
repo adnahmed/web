@@ -1,11 +1,15 @@
+const { AuthenticationError } = require('apollo-server-express');
+const logger = require('../logger');
 const db = require('../models/index');
-async function getUser(payload) {
-    const user = await db[payload.role].findOne({
-        where: {id: payload.sub}
-    })
-    if(!user)
-        throw new Error(`${payload.role} not Found.`);
-    return user;
+async function getUser(payload, ip) {
+    try {
+        const user = await db[payload.role].findOne({
+            where: {id: payload.sub}
+        })
+        return user;
+    } catch (err) {
+        logger.warn(`Invalid role provided from: ${ip}`);
+    }
 }
 
 module.exports = { getUser };

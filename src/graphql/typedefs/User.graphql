@@ -11,6 +11,12 @@ interface AuthenticationResponse {
     success: Boolean!
 }
 
+type UserRegisterResponse {
+    code: Int!
+    message: String!
+    success: Boolean!
+    user: User
+}
 type LoginResponse implements AuthenticationResponse {
     code: Int!
     message: String!
@@ -19,5 +25,11 @@ type LoginResponse implements AuthenticationResponse {
 }
 
 type Query {
-    loginUser(username: String!, password: String!, role: String!): LoginResponse
+    loginOther(username: String!, password: String!, role: String!, administratorUsername: String!): LoginResponse!
+    loginAdministrator(username: String!, password: String!): LoginResponse!
+}
+
+type Mutation {
+    registerAdministrator(username: String!, password: String!, first_name:String!, middle_name:String, last_name:String): UserRegisterResponse
+    registerOther(username: String!, password: String!, first_name:String!, middle_name:String, last_name:String, role: String!, administratorUsername: String!): UserRegisterResponse
 }
