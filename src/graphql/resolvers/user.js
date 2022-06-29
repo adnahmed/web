@@ -1,6 +1,11 @@
 const authenticator = require('../../lib/Authenticator').defaultAuthenticator;
 const logger = require('../../logger/index');
 module.exports = {
+    User: {
+        __resolveType(user, context, info) {
+            
+        }
+    },
     Query: {
         async loginOther(parent, args, context) {
             var response = {};

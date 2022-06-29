@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     getFullname() {
       return [this.first_name, this.middle_name, this.last_name].join(" ");
     }
-  
+
     static associate(models) {
       Administrator.hasMany(models['examinee']);
       Administrator.hasMany(models['proctor']);
@@ -34,17 +34,17 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
+      middle_name: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+        },
+      },
       last_name: {
         type: DataTypes.STRING,
         validate: {
           notEmpty: true,
         },
-        middle_name: {
-          type: DataTypes.STRING,
-          validate: {
-            notEmpty: true,
-          },
-        }
       },
       password: {
         type: DataTypes.STRING,
@@ -53,8 +53,7 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
-    },
-    {
+    }, {
       sequelize,
       modelName: "administrator",
       timestamps: false,

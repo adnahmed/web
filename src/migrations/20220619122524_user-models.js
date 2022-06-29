@@ -39,12 +39,12 @@ const migrationCommands = (transaction) => [
           field: "first_name",
           allowNull: false,
         },
-        last_name: {
+        middle_name: {
           type: Sequelize.STRING,
-          field: "last_name",
+          field: "middle_name",
           allowNull: true,
         },
-        middle_name: {
+        last_name: {
           type: Sequelize.STRING,
           field: "last_name",
           allowNull: true,
@@ -81,7 +81,7 @@ const migrationCommands = (transaction) => [
         },
         middle_name: {
           type: Sequelize.STRING,
-          field: "last_name",
+          field: "middle_name",
           allowNull: true,
         },
         last_name: {
@@ -129,7 +129,7 @@ const migrationCommands = (transaction) => [
         },
         middle_name: {
           type: Sequelize.STRING,
-          field: "last_name",
+          field: "middle_name",
           allowNull: true,
         },
         last_name: {

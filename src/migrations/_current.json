@@ -24,12 +24,10 @@
                     "seqType": "Sequelize.STRING"
                 },
                 "middle_name": {
-                    "allowNull": true,
                     "field": "middle_name",
-                    "seqType":"Sequelize.STRING"
+                    "seqType": "Sequelize.STRING"
                 },
                 "last_name": {
-                    "allowNull": true,
                     "field": "last_name",
                     "seqType": "Sequelize.STRING"
                 },
@@ -64,12 +62,10 @@
                     "seqType": "Sequelize.STRING"
                 },
                 "middle_name": {
-                    "allowNull": true,
                     "field": "middle_name",
-                    "seqType":"Sequelize.STRING"
+                    "seqType": "Sequelize.STRING"
                 },
                 "last_name": {
-                    "allowNull": true,
                     "field": "last_name",
                     "seqType": "Sequelize.STRING"
                 },
@@ -115,12 +111,10 @@
                     "seqType": "Sequelize.STRING"
                 },
                 "middle_name": {
-                    "allowNull": true,
                     "field": "middle_name",
-                    "seqType":"Sequelize.STRING"
+                    "seqType": "Sequelize.STRING"
                 },
                 "last_name": {
-                    "allowNull": true,
                     "field": "last_name",
                     "seqType": "Sequelize.STRING"
                 },
@@ -144,8 +138,8 @@
             "indexes": []
         }
     },
-    "path": "/Users/adnankhan/Desktop/Desktop/Projects/finalproject/nodejs-backend/src/migrations/_current.json",
-    "backupPath": "/Users/adnankhan/Desktop/Desktop/Projects/finalproject/nodejs-backend/src/migrations/_current_bak.json",
+    "path": "/Users/adnankhan/Desktop/Desktop/Projects/FYP/Backend - Dockerized/nodejs-backend/src/migrations/_current.json",
+    "backupPath": "/Users/adnankhan/Desktop/Desktop/Projects/FYP/Backend - Dockerized/nodejs-backend/src/migrations/_current_bak.json",
     "exists": false,
     "revision": 1
 }

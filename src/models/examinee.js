@@ -6,7 +6,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
     class Examinee extends Model { 
         getFullname() {
-            return [this.first_name, this.last_name].join(' ');
+            return [this.first_name, this.middle_name, this.last_name].join(' ');
         }
         static associate(models) {
             Examinee.belongsTo(models['administrator']);
