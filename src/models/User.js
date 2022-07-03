@@ -4,18 +4,17 @@ const {
 } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Administrator extends Model {
+  class User extends Model {
     getFullname() {
-      return [this.first_name, this.middle_name, this.last_name].join(" ");
+      return [this.prefix, this.given_name, this.middle_name, this.last_name].flatMap((elem)=> {elem === null ? [] : [elem]}).join(" ");
     }
 
     static associate(models) {
-      Administrator.hasMany(models['examinee']);
-      Administrator.hasMany(models['proctor']);
+      User.hasOne(models['role']);
     }
   }
 
-  Administrator.init(
+  User.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -27,7 +26,13 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
       },
-      first_name: {
+      prefix: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      given_name: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -55,10 +60,10 @@ module.exports = (sequelize, DataTypes) => {
       },
     }, {
       sequelize,
-      modelName: "administrator",
+      modelName: "user",
       timestamps: false,
     }
   );
 
-  return Administrator;
+  return User;
 };
