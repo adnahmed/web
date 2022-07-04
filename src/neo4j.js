@@ -1,7 +1,15 @@
 const neo4j = require('neo4j-driver')
 const config = require('./config')
 
-const driver = neo4j.driver(config.neo4j.url, neo4j.auth.basic(config.neo4j.username, config.neo4j.password))
+const driver = neo4j.driver(config.neo4j.url, neo4j.auth.basic(config.neo4j.username, config.neo4j.password));
+(async () => {
+    try {
+        await driver.verifyConnectivity()
+        console.log('Driver created')
+    } catch (error) {
+        console.log(`connectivity verification failed. ${error}`)
+    }
+})();
 
 module.exports = {
     read: (cypher, params = {}, database = config.neo4j.database) => {
