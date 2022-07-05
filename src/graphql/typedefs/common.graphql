@@ -1,8 +1,0 @@
-type Group {
-    name: String! 
-}
-
-type Subject {
-    id: UUID!
-    name: String! 
-}

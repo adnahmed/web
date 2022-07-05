@@ -1,9 +1,0 @@
-type Examinee implements User{
-    id: UUID!
-    first_name: String
-    middle_name: String
-    last_name: String
-    groups: [Group]
-    completedExams: [Exam!]
-    completedPaper: [Paper!]
-}
