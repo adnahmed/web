@@ -7,7 +7,7 @@ const { print, getIntrospectionQuery } = require('graphql')
 const jwt = require('jsonwebtoken')
 const secret = require('../config').secret
 const path = require('path')
-const { getUser } = require('../lib/getter')
+//const { getUser } = require('../lib/getter')
 const logger = require('../logger')
 
 module.exports = (async () => {
