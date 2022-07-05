@@ -28,21 +28,6 @@ module.exports = {
                 throw e
             })
     },
-    txRead: async (cypher, params = {}, database = config.neo4j.database) => {
-        const session = driver.session({
-            defaultAccessMode: neo4j.session.READ,
-            database
-        });
-        try {
-        return await session.readTransaction(tx => 
-            tx.run(cypher, params)
-        )
-        } catch (error) {
-            throw error;
-        } finally {
-            await session.close();
-        }
-    },
     write: (cypher, params = {}, database = config.neo4j.database) => {
         const session = driver.session({
             defaultAccessMode: neo4j.session.WRITE,
@@ -58,20 +43,5 @@ module.exports = {
                 session.close()
                 throw e
             })
-    },
-    txWrite: async (cypher, params = {}, database = config.neo4j.database) => {
-        const session = driver.session({
-            defaultAccessMode: neo4j.session.WRITE,
-            database
-        });
-        try {
-        return await session.writeTransaction(tx => 
-            tx.run(cypher, params)
-        )
-        } catch (error) {
-            throw error;
-        } finally {
-            await session.close();
-        }
     },
 }
