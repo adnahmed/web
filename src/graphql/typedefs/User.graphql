@@ -1,35 +1,35 @@
-interface User {
+type User {
     id: UUID!
-    first_name: String
+    prefix: String
+    given_name: String!
     middle_name: String
     last_name: String
+    email: Email!
 }
 
-interface AuthenticationResponse {
-    code: Int!
-    message: String!
-    success: Boolean!
-}
-
-type UserRegisterResponse {
-    code: Int!
-    message: String!
-    success: Boolean!
-    user: User
-}
-type LoginResponse implements AuthenticationResponse {
+type AuthenticationResponse {
     code: Int!
     message: String!
     success: Boolean!
     token: String
+    user: User
 }
 
 type Query {
-    loginOther(username: String!, password: String!, role: String!, administratorUsername: String!): LoginResponse!
-    loginAdministrator(username: String!, password: String!): LoginResponse!
+    logIn(username: String!,
+        password: String!
+    ): AuthenticationResponse!
 }
 
 type Mutation {
-    registerAdministrator(username: String!, password: String!, first_name:String!, middle_name:String, last_name:String): UserRegisterResponse
-    registerOther(username: String!, password: String!, first_name:String!, middle_name:String, last_name:String, role: String!, administratorUsername: String!): UserRegisterResponse
+    register(username: String!, 
+            password: String!, 
+            role: String!, 
+            prefix: String, 
+            given_name:String!, 
+            middle_name:String, 
+            last_name:String, 
+            email: String!
+            organization: String
+    ): AuthenticationResponse
 }
