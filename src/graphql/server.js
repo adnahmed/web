@@ -4,6 +4,7 @@ const { mergeResolvers } = require('@graphql-tools/merge')
 const { typeDefs: scalarTypeDefs } = require('graphql-scalars')
 const { resolvers: scalarResolvers } = require('graphql-scalars')
 const { print, getIntrospectionQuery } = require('graphql')
+const  depthLimit = require('graphql-depth-limit');
 const jwt = require('jsonwebtoken')
 const secret = require('../config').secret
 const path = require('path')
@@ -43,6 +44,11 @@ module.exports = (async () => {
                 logger.warn(`Invalid token: ${req.headers.authorization} from ${req.ip}`);
             }
         },
+        validationRules: [ depthLimit(
+            10,
+            {}, // ignore no fields
+            depth => { if (depth >= 10) logger.warn(`Depth Limit Exceeded: ${depth}`)}
+        ) ]
     })
     return server
 })()
