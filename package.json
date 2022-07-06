@@ -23,6 +23,7 @@
         "morgan": "^1.10.0",
         "neo4j-driver": "^4.4.6",
         "rate-limiter-flexible": "^2.3.7",
+        "redis": "^4.2.0",
         "winston": "^3.7.2"
     },
     "devDependencies": {
