@@ -2,12 +2,12 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const express = require('express');
 const app = express();
+const neo4j = require('./neo4j');
+const cypher = require('./cypher/index');
+
 app.use(bodyParser.json()); // parse JSON body in POST request body
 app.use(bodyParser.urlencoded({ extended: true })); // parse multipart-form data in POST request body 
 app.use(morgan('combined'));
-
-// Convert response from neo4j types to native types
-app.use(require('./middleware/neo4j-type-handler'))
 
 (async () => {
     const apolloServer = await require('./graphql/server');
@@ -15,14 +15,9 @@ app.use(require('./middleware/neo4j-type-handler'))
     apolloServer.applyMiddleware({ app });
 })();
 
-// Handle any constraint errors thrown by Neo4j
-app.use(require('./middleware/neo4j-error-handler'))
-
-app.use(function (req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
+/* Create Constraints on Startup */
+neo4j.write(cypher('user-username-unique-constraint'));
+/*********/
 
 
 module.exports = app;
