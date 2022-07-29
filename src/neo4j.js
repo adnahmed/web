@@ -1,11 +1,13 @@
 const neo4j = require('neo4j-driver')
 const config = require('./config')
-
 const driver = neo4j.driver(config.neo4j.url, neo4j.auth.basic(config.neo4j.username, config.neo4j.password));
+
 (async () => {
     try {
         await driver.verifyConnectivity()
-        console.log('Driver created')
+        console.log('Neo4j Driver created')
+        console.log('Setting up constraints for Database.')
+        require('./cypher/contraints-setup');
     } catch (error) {
         console.log(`connectivity verification failed. ${error}`)
     }
