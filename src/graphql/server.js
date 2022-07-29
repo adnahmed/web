@@ -14,15 +14,17 @@ const logger = require('../logger')
 module.exports = (async () => {
     const server = new ApolloServer({
         resolvers: {
-            ...mergeResolvers(
-                await loadFiles(path.join(__dirname, './resolvers/**/*.js'))
-            ),
             ...scalarResolvers,
+            ...mergeResolvers (
+               await loadFiles(path.join(__dirname, './resolvers/**/*.js'))
+            ),
         },
-        typeDefs:
+        typeDefs: [
             print(
                 await loadFiles(path.join(__dirname, './typedefs/**/*.graphql'))
-            ) + scalarTypeDefs,
+            ),
+            ...scalarTypeDefs
+        ],
         csrfPrevention: true,
         cache: 'bounded',
         context: async ({ req }) => {
