@@ -15,6 +15,13 @@ module.exports = {
                         username: args.username,
                     }
                 )
+                if(userPasswordRes.records.length == 0) {
+                    return {
+                        code: 403,
+                        message: 'Username not found.',
+                        success: false,
+                    }
+                }
                 const hashedPassword = userPasswordRes.records[0].get(0)
                 try {
                     const isSame = await bcrypt.compare(
@@ -32,10 +39,16 @@ module.exports = {
                             cypher(`get-user-by-username`),
                             { username: args.username }
                         )
+                        const roleRes = await neo4j.read(
+                            cypher(`get-user-role`),
+                            { username: args.username }
+                        );
+                        delete userRes.records[0].get(0).properties.password;
                         const payload = {
                             user: userRes.records[0].get(0).properties,
-                            labels: userRes.records[0].get(0).labels,
+                            role: roleRes.records[0].get(0),
                         }
+
                         try {
                             const token = await jwt.sign(payload, config.secret)
                             return {
@@ -43,7 +56,10 @@ module.exports = {
                                 message: 'Login Success',
                                 success: true,
                                 token: token,
-                                user: payload.user,
+                                user: {
+                                    ...payload.user,
+                                    role: payload.role,
+                                }
                             }
                         } catch (err) {
                             logger.warn(
@@ -89,11 +105,14 @@ module.exports = {
                         'Unknown Role provided. Must be one of [ administrator, proctor, examinee ]',
                     success: false,
                 }
-            if (arg.role == 'administrator' && !args.organization) {
+            const existingUsers = await neo4j.read(
+                cypher('get-user-by-username'),
+                args
+            );
+            if (existingUsers.records.length > 0) {
                 return {
-                    code: 400,
-                    message:
-                        'Organization must be provided for administrator registeration.',
+                    code: 403,
+                    message: "Userame already exists",
                     success: false,
                 }
             }
@@ -107,33 +126,35 @@ module.exports = {
                     args.password,
                     config.saltRounds
                 )
-
                 args.password = hashedPassword
                 try {
-                    const res = await neo4j.write(
-                        cypher(`create-user-${args.role}`),
+                    const userCreateResponse = await neo4j.write(
+                        cypher(`create-user`),
                         args
-                    )
-
-                    if (args.role == 'administrator') {
-                        await neo4j.write(
-                            cypher('create-administrator-organization-relationship', args)
-                        );
-                    }
-
+                    );
+                    await neo4j.write(
+                        cypher('create-user-organization-relationship'),
+                        args
+                    );
+                    await neo4j.write(
+                        cypher(`create-role-user-relationship`),
+                        args
+                    );
                     const payload = {
-                        user: res.records[0].get(0).properties,
-                        labels: res.records[0].get(0).labels,
+                        user: userCreateResponse.records[0].get(0).properties,
+                        role: args.role,
                     }
                     try {
                         const token = await jwt.sign(payload, config.secret)
-
                         return {
                             code: 200,
                             message: 'Registeration Success',
                             success: true,
                             token: token,
-                            user: payload.user,
+                            user: {
+                                ...payload.user,
+                                role: payload.role
+                            },
                         }
                     } catch (err) {
                         logger.warn(
