@@ -10,8 +10,8 @@ const driver = neo4j.driver(config.url, neo4j.auth.basic(config.username, config
             await driver.verifyConnectivity()
             connectionSuccessful = true;
             console.log('Neo4j Driver created')
-            console.log('Setting up constraints for Database.')
-            require('./cypher/contraints-setup');
+            console.log('Startup Setup For Neo4j');
+            require('./cypher/startup-setup');
         } catch (error) {
             console.log(`Retry: ${retryTime}, Connectivity verification failed. ${error}`)
             if(retryTime == config.MAX_CONNECTION_RETRY) {
