@@ -5,5 +5,8 @@ const cypher = require('./index');
 await neo4j.write(cypher('user-username-unique-constraint'));
 /*********/
 
+/* Create Index on Startup */
+await neo4j.write(cypher('model-indexing-queries'));
+/*********/
 console.log('Startup setup complete.');
 
