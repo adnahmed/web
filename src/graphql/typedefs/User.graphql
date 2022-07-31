@@ -35,6 +35,5 @@ type Mutation {
             middle_name:String, 
             last_name:String, 
             email: EmailAddress!
-            organization: String!
     ): AuthenticationResponse!
 }

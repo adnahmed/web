@@ -3,7 +3,7 @@ const { loadFiles } = require('@graphql-tools/load-files')
 const { mergeResolvers } = require('@graphql-tools/merge')
 const { typeDefs: scalarTypeDefs } = require('graphql-scalars')
 const { resolvers: scalarResolvers } = require('graphql-scalars')
-const { print, getIntrospectionQuery } = require('graphql')
+const { print } = require('graphql')
 const  depthLimit = require('graphql-depth-limit');
 const jwt = require('jsonwebtoken')
 const secret = require('../config').secret
@@ -52,4 +52,4 @@ module.exports = (async () => {
         ) ]
     })
     return server
-})()
+})();

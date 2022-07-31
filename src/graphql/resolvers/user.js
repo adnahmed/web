@@ -133,10 +133,6 @@ module.exports = {
                         args
                     );
                     await neo4j.write(
-                        cypher('create-user-organization-relationship'),
-                        args
-                    );
-                    await neo4j.write(
                         cypher(`create-role-user-relationship`),
                         args
                     );
