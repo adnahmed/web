@@ -1,0 +1,44 @@
+const neo4j = require('../neo4j')
+const cypher = require('../cypher/index')
+async function getUserRole(username) {
+    const roleQueryRespone = await neo4j
+        .read(cypher(`get-user-role`), { username: username })
+    if (roleQueryRespone.records.length > 0)
+        return roleQueryRespone.records[0].get(0);
+    throw new RoleFetchError(username);
+
+}
+async function checkExistingUsername(username, newUser) {
+    const userQueryResponse = await neo4j.read(cypher('get-user-by-username'), {
+        username: username,
+    })
+    if (userQueryResponse.records.length == 0) {
+        if (!newUser)
+            throw new UsernameError(UsernameError.DOES_NOT_EXISTS, username)
+    } else {
+        if (newUser)
+            throw new UsernameError(UsernameError.ALREADY_EXISTS, username)
+        return userQueryResponse.records[0].get(0).properties
+    }
+}
+
+class UsernameError extends Error {
+    static ALREADY_EXISTS = 0
+    static DOES_NOT_EXISTS = 1
+    constructor(type, username) {
+        super()
+        this.code = 403
+        if (type == UsernameError.ALREADY_EXISTS)
+            this.message = `Username already exists: ${username}`
+        else if (type == UsernameError.DOES_NOT_EXISTS)
+            this.message = `Username does not exists: ${username}`
+    }
+}
+class RoleFetchError extends Error {
+    constructor(username) {
+        super();
+        this.message = `Error Occurred Fetching Role for User ${username}`;
+        this.code = 500;
+    }
+}
+module.exports = { UsernameError, checkExistingUsername, getUserRole , RoleFetchError }

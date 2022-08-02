@@ -1,8 +1,8 @@
 create (u:User {
         prefix: coalesce('', $prefix),
-        given_name: $given_name,
-        middle_name: coalesce($middle_name, ''),
-        last_name: coalesce($last_name, ''),
+        givenName: $givenName,
+        middleName: coalesce($middleName, ''),
+        lastName: coalesce($lastName, ''),
         email: $email,
         username: $username,
         password: $password,

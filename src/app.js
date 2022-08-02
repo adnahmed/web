@@ -1,6 +1,7 @@
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const express = require('express');
+const { fromGraphQLError } = require('apollo-server-errors');
 const app = express();
 
 app.use(bodyParser.json()); // parse JSON body in POST request body
@@ -12,6 +13,5 @@ app.use(morgan('combined'));
     await apolloServer.start();
     apolloServer.applyMiddleware({ app });
 })();
-
 module.exports = app;
 

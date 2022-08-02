@@ -1,4 +1,4 @@
-const { ApolloServer, AuthenticationError } = require('apollo-server-express')
+const { ApolloServer } = require('apollo-server-express')
 const { loadFiles } = require('@graphql-tools/load-files')
 const { mergeResolvers } = require('@graphql-tools/merge')
 const { typeDefs: scalarTypeDefs } = require('graphql-scalars')
@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken')
 const secret = require('../config').secret
 const path = require('path')
 const logger = require('../logger')
+const { checkExistingUsername, getUserRole } = require("./utils");
 
 module.exports = (async () => {
     const server = new ApolloServer({
@@ -25,31 +26,35 @@ module.exports = (async () => {
             ...scalarTypeDefs
         ],
         csrfPrevention: true,
+        // TODO: Add Proper Error Handling.
         cache: 'bounded',
         context: async ({ req }) => {
-            if (!req.headers.authorization) return
-            try {
-                const decrypt = jwt.verify(req.headers.authorization, secret)
+            if (!req.headers.authorization) return { req }
+            const payload = await jwt.verify(req.headers.authorization, secret)
                 try {
-                    const user = await getUser(decrypt, req.ip);
-
-                    if (!user)
-                        throw new AuthenticationError(
-                            `${decrypt.role}: ${decrypt.sub} not Found.`
-                        )
-                    return { user, role: decrypt.role }
-                } catch (err) {
-                    logger.info(err)
-                }
+                    if (!payload.sub || !payload.role){
+                        logger.warn(`${req.ip}: Malformed JWT Token, ${req.headers.authorization}`);
+                        return { req };
+                    } 
+                    const user = await getUser(payload.sub);
+                    return { user, req };
             } catch (err) {
-                logger.warn(`Invalid token: ${req.headers.authorization} from ${req.ip}`);
+                logger.warn(`${req.ip}: ${err.message}, Token: ${req.headers.authorization}`);
+                return { req };
             }
         },
         validationRules: [ depthLimit(
             10,
             {}, // ignore no fields
             depth => { if (depth >= 10) logger.warn(`Depth Limit Exceeded: ${depth}`)}
-        ) ]
+        )]
     })
     return server
 })();
+
+async function getUser(username) {
+    // TODO: Use Redis Cache here to fetch user for username
+    const user = await checkExistingUsername(username, false);
+    user.role = await getUserRole (user.username);
+    return user;
+}

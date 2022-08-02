@@ -24,5 +24,12 @@ module.exports = (err) => {
                 success: false
                 }
         }
+        else {
+            return {
+                code: 500,
+                message: err.message,
+                success: false
+            }
+        }
     }
 }

@@ -1,9 +1,9 @@
 type User {
     id: UUID!
     prefix: String
-    given_name: String!
-    middle_name: String
-    last_name: String
+    givenName: String!
+    middleName: String
+    lastName: String
     email: EmailAddress!
     role: Role!
 }
@@ -26,14 +26,17 @@ type Query {
     ): AuthenticationResponse!
 }
 
+input UserRegisterationInput {
+    username: String!, 
+    password: String!, 
+    role: String!, 
+    prefix: String, 
+    givenName:String!, 
+    middleName:String, 
+    lastName:String, 
+    email: EmailAddress!
+}
+
 type Mutation {
-    register(username: String!, 
-            password: String!, 
-            role: String!, 
-            prefix: String, 
-            given_name:String!, 
-            middle_name:String, 
-            last_name:String, 
-            email: EmailAddress!
-    ): AuthenticationResponse!
+    register(user: UserRegisterationInput!): AuthenticationResponse!
 }
