@@ -62,6 +62,10 @@ module.exports = {
                     cypher(`create-role-user-relationship`),
                     args.user
                 )
+                await neo4j.write(
+                    cypher(`create-organization-user-relationship`),
+                    { username: args.user.username, organization: args.user.organization }
+                )
                 return await prepareAuthenticationResponse(
                     args.user,
                     'Registeration Successful'
@@ -100,7 +104,8 @@ async function hashValue(payload) {
 }
 
 async function prepareAuthenticationResponse(user, authMessage) {
-    delete user.password
+    delete user.createdAt;
+    delete user.password;
     const payload = {
         sub: user.username,
         role: user.role,
