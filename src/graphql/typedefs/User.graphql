@@ -13,6 +13,7 @@ enum Role {
     proctor
     examinee
 }
+
 type AuthenticationResponse {
     code: Int!
     message: String!
@@ -22,7 +23,10 @@ type AuthenticationResponse {
 }
 
 type Query {
-    logIn(username: String!,
+    logInEmail(email: EmailAddress!,
+        password: String!
+    ): AuthenticationResponse!
+    logInUsername(username: String!,
         password: String!
     ): AuthenticationResponse!
 }

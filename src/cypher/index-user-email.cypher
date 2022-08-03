@@ -1,0 +1,1 @@
+create index user_index_email if not exists for (u:User) on (u.email)

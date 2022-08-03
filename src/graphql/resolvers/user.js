@@ -5,33 +5,27 @@ const cypher = require('../../cypher/index')
 const bcrypt = require('bcrypt')
 const config = require('../../config')
 const jwt = require('jsonwebtoken')
-const { RoleFetchError, UsernameError, checkExistingUsername, getUserRole } = require('../utils');
+const { RoleFetchError, UsernameError, checkExistingUsername, getUserRole, ErrorResponse, EmailError, checkExistingEmail } = require('../utils');
 module.exports = {
     Query: {
-        async logIn(parent, args, context) {
+        async logInUsername(parent, args, context) {
             try {
                 const user = await checkExistingUsername(args.username, false)
-                await verifyPassword(args.password, user.password)
-                user.role =  await getUserRole(args.username);
-                return await prepareAuthenticationResponse(
-                    user,
-                    'Login Successful'
-                )
+                return await logIn(user, args.password, context);
             } catch (err) {
-                logger.warn(`${context.req.ip}: ${err.message}`);
-                if (
-                    err instanceof UsernameError || 
-                    err instanceof PasswordError || 
-                    err instanceof RoleFetchError
-                )
-                {
-                        return {
-                        code: err.code,
-                        message: err.message,
-                        success: false,
-                    }
-                }
-                return neo4jErrorHandler(err)
+                if (err instanceof UsernameError)
+                    return  new ErrorResponse(err);
+                return neo4jErrorHandler(err);
+            }
+        },
+        async logInEmail(parent, args, context) {
+            try {
+                const user = await checkExistingEmail(args.email);
+                return await logIn(user, args.password, context);
+            } catch (err) {
+                if (err instanceof EmailError)
+                    return  new ErrorResponse(err);
+                return neo4jErrorHandler(err);
             }
         },
     },
@@ -76,12 +70,7 @@ module.exports = {
                     err instanceof HashError ||
                     err instanceof JWTSignError ||
                     err instanceof UsernameError
-                )
-                    return {
-                        code: err.code,
-                        message: err.message,
-                        success: false,
-                    }
+                ) return new ErrorResponse(err);
                 else return neo4jErrorHandler(err)
             }
         },
@@ -89,7 +78,7 @@ module.exports = {
 }
 
 async function verifyPassword(provided, ground) {
-    if(! await bcrypt.compare(provided, ground))
+    if (! await bcrypt.compare(provided, ground))
         throw new PasswordError;
 }
 
@@ -147,3 +136,26 @@ class HashError extends Error {
     }
 }
 
+async function logIn(user, password, context) {
+    try {
+        await verifyPassword(password, user.password)
+        user.role = await getUserRole(user.username);
+        return await prepareAuthenticationResponse(
+            user,
+            'Login Successful'
+        )
+    } catch (err) {
+        logger.warn(`${context.req.ip}: ${err.message}`);
+        if (
+            err instanceof PasswordError ||
+            err instanceof RoleFetchError
+        ) {
+            return {
+                code: err.code,
+                message: err.message,
+                success: false,
+            }
+        }
+        return neo4jErrorHandler(err)
+    }
+}

@@ -8,6 +8,16 @@ async function getUserRole(username) {
     throw new RoleFetchError(username);
 
 }
+async function checkExistingEmail(email, newUser) {
+    const userQueryResponse = await neo4j.read(cypher('get-user-by-email'), {
+        email: email,
+    })
+    if (userQueryResponse.records.length == 0) {
+            throw new EmailError(email);
+    } else {
+        return userQueryResponse.records[0].get(0).properties
+    }
+}
 async function checkExistingUsername(username, newUser) {
     const userQueryResponse = await neo4j.read(cypher('get-user-by-username'), {
         username: username,
@@ -34,6 +44,13 @@ class UsernameError extends Error {
             this.message = `Username does not exists: ${username}`
     }
 }
+class EmailError extends Error {
+    constructor(email) {
+        super()
+        this.code = 403
+        this.message = `Email does not exists: ${email}`
+    }
+}
 class RoleFetchError extends Error {
     constructor(username) {
         super();
@@ -41,4 +58,11 @@ class RoleFetchError extends Error {
         this.code = 500;
     }
 }
-module.exports = { UsernameError, checkExistingUsername, getUserRole , RoleFetchError }
+class ErrorResponse {
+    constructor(err) {
+       this.code = err.code
+       this.message = err.message
+       this.success = false 
+    }
+}
+module.exports = { UsernameError, ErrorResponse, checkExistingUsername, getUserRole , RoleFetchError, checkExistingEmail, EmailError}
