@@ -65,4 +65,36 @@ class ErrorResponse {
        this.success = false 
     }
 }
-module.exports = { UsernameError, ErrorResponse, checkExistingUsername, getUserRole , RoleFetchError, checkExistingEmail, EmailError}
+async function getUser(req) {
+    if (!req.headers.authorization) {
+        return new { status: false, user: null }
+    }
+
+    const payload = await jwt.verify(req.headers.authorization, secret)
+    if (!payload.sub || !payload.role){
+        logger.warn(`${req.ip}: Malformed JWT Token, ${req.headers.authorization}`);
+        return { status: false, user: null };
+    } 
+    // TODO: Use Redis Cache here to fetch user for username
+    const user = await checkExistingUsername(username, false);
+    user.role = await getUserRole (user.username);
+    return { status: true, user: user };
+}
+
+const Roles = {
+    administrator: "administrator",
+    proctor: "proctor",
+    examinee: "examinee"
+};
+
+module.exports = { 
+    UsernameError, 
+    ErrorResponse, 
+    checkExistingUsername, 
+    getUserRole, 
+    RoleFetchError,
+    checkExistingEmail,
+    EmailError,
+    getUser,
+    Roles
+}

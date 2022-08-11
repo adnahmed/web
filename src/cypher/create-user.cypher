@@ -1,4 +1,5 @@
 create (u:User {
+        id: randomUUID()
         prefix: coalesce('', $prefix),
         givenName: $givenName,
         middleName: coalesce($middleName, ''),
