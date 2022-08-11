@@ -7,7 +7,7 @@ const { print } = require('graphql')
 const depthLimit = require('graphql-depth-limit');
 const path = require('path')
 const logger = require('../logger')
-const { getUser } = require("./utils");
+const { getUser } = require("./auth_utils");
 
 module.exports = (async () => {
     const server = new ApolloServer({

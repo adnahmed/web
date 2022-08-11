@@ -5,7 +5,7 @@ const cypher = require('../../cypher/index')
 const bcrypt = require('bcrypt')
 const config = require('../../config')
 const jwt = require('jsonwebtoken')
-const { RoleFetchError, UsernameError, checkExistingUsername, getUserRole, ErrorResponse, EmailError, checkExistingEmail } = require('../utils');
+const { RoleFetchError, UsernameError, checkExistingUsername, getUserRole, ErrorResponse, EmailError, checkExistingEmail } = require('../auth_utils');
 module.exports = {
     Query: {
         async logInUsername(parent, args, context) {

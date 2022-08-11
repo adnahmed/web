@@ -5,7 +5,7 @@ const cypher = require('../cypher');
 const router = express.Router();
 const send = require('send');
 const formidable = require('formidable');
-const {createNecessaryDirectoriesSync} = require('filesac');
+// const {createNecessaryDirectoriesSync} = require('filesac');
 router.get('/current', async (req, res) => {
     const { status, user } = await getUser(req);
     if (!status) res.status(403).send("Unauthorized access not allowed.")
@@ -70,7 +70,7 @@ router.post('/', async (req, res) => {
     }
 
     const uploadPath = __dirname + '/blobs';
-    createNecessaryDirectoriesSync(`${uploadPath}`);
+    // createNecessaryDirectoriesSync(`${uploadPath}/x`); // TODO: replace with custom/prebuild functionality. Cannot import module due to CommonJS and ES6 incompatibility
     const form = formidable({
         uploadDir: uploadPath,
         keepExtensions: true,
@@ -83,7 +83,7 @@ router.post('/', async (req, res) => {
         }
     });
   
-    form.parse(req, (err, fields, files) => {
+    form.parse(req, async (err, fields, files) => {
       if (err) {
         res.status(500).send("Server Error Occurred. File Upload Unsuccessful.");
       }
@@ -106,3 +106,4 @@ router.post('/', async (req, res) => {
     });
   });
   
+  module.exports = router;

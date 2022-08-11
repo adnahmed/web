@@ -12,5 +12,6 @@ app.use(morgan('combined'));
     await apolloServer.start();
     apolloServer.applyMiddleware({ app });
 })();
+app.use('/exam', require('./files/exam'));
 module.exports = app;
 
