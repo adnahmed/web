@@ -1,7 +1,6 @@
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const express = require('express');
-const { fromGraphQLError } = require('apollo-server-errors');
 const app = express();
 
 app.use(bodyParser.json()); // parse JSON body in POST request body
