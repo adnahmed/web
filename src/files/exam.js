@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
     const { status, user } = await getUser(req);
 
     if (!status) res.status(403).send("Unauthorized access not allowed.")
-    if (!user.role || user.role != Role.administrator) res.status(403).send("Unauthorized request made, only administrators are allowed.")
+    if (!user.role || user.role != Roles.administrator) res.status(403).send("Unauthorized request made, only administrators are allowed.")
 
     const examGroupId = req.headers.examGroupId;
     const examStartDate = req.headers.startDate;
@@ -62,9 +62,10 @@ router.post('/', async (req, res) => {
     });
 
     var alreadyExists = false;
+    var exam = null;
     if (examAlreadyExistsRes.records.length != 0) {
         // if it does then does it fall between start and end time.
-        const exam = examAlreadyExistsRes.records[0].get(0).properties;
+        exam = examAlreadyExistsRes.records[0].get(0).properties;
         if (exam.startDate == examStartDate || exam.endDate == exam.endDate) res.status(400).send("Cannot create duplicate exam that coincide in time.");
         alreadyExists = true;
     }
