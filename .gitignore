@@ -1,5 +1,6 @@
+.vscode/
 node_modules/
 config.js
 .env
 *-log-*.log
-/**/.DS_STORE
+src/files/blobs

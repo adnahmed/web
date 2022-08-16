@@ -1,10 +1,11 @@
 {
     "scripts": {
-        "start": "cd src && sequelize db:migrate && sequelize db:seed:all && node ../server.js",
         "go": "node server.js",
         "test": "jest"
     },
     "dependencies": {
+        "@graphql-tools/load-files": "^6.5.4",
+        "@graphql-tools/merge": "^8.2.14",
         "@grpc/grpc-js": "^1.6.7",
         "apollo-server": "^3.9.0",
         "apollo-server-express": "^3.9.0",
@@ -13,20 +14,24 @@
         "express": "^4.18.1",
         "express-rate-limit": "^6.4.0",
         "express-validator": "^6.14.1",
-        "graphql": "^16.5.0",
+        "filesac": "^14.2.0",
+        "formidable": "^2.0.1",
+        "graphql-depth-limit": "^1.1.0",
+        "graphql-middleware": "^6.1.31",
+        "graphql-rate-limit": "^3.3.0",
         "graphql-scalars": "^1.17.0",
+        "graphql-shield": "^7.5.0",
+        "graphql-tools": "^8.2.12",
         "livekit-server-sdk": "^1.0.1",
         "morgan": "^1.10.0",
         "neo4j-driver": "^4.4.6",
-        "passport": "^0.6.0",
-        "passport-jwt": "^4.0.0",
-        "pg": "^8.7.3",
-        "pg-hstore": "^2.3.4",
+        "redis": "^4.2.0",
+        "send": "^0.18.0",
         "winston": "^3.7.2"
     },
     "devDependencies": {
-        "prettier": "2.7.1",
-        "sequelize-cli": "^6.4.1"
+        "eslint": "^8.21.0",
+        "prettier": "2.7.1"
     },
     "prettier": {
         "trailingComma": "es5",

@@ -1,0 +1,48 @@
+type User {
+    id: UUID!
+    prefix: String
+    givenName: String!
+    middleName: String
+    lastName: String
+    email: EmailAddress!
+    role: Role!
+}
+
+enum Role {
+    administrator
+    proctor
+    examinee
+}
+
+type AuthenticationResponse {
+    code: Int!
+    message: String!
+    success: Boolean!
+    token: String
+    user: User
+}
+
+type Query {
+    logInEmail(email: EmailAddress!,
+        password: String!
+    ): AuthenticationResponse!
+    logInUsername(username: String!,
+        password: String!
+    ): AuthenticationResponse!
+}
+
+input UserRegisterationInput {
+    username: String!, 
+    password: String!, 
+    role: String!, 
+    prefix: String, 
+    givenName:String!, 
+    middleName:String, 
+    lastName:String, 
+    email: EmailAddress!,
+    organization: String!
+}
+
+type Mutation {
+    register(user: UserRegisterationInput!): AuthenticationResponse!
+}

@@ -1,0 +1,22 @@
+type GetManagedUsersResponse {
+    code: Int!
+    message: String
+    success: Boolean!
+    Users: [User!]
+}
+
+type NewManagedUsersResponse {
+    code: Int!
+    message: String
+    success: Boolean!
+    User: User
+}
+
+type Query {
+    getProctors: GetManagedUsersResponse!
+}
+
+#    getExaminees(): GetUsersResponse
+# type Mutation {
+#     # newProctor(user: User): NewManagedUserResponse
+# }

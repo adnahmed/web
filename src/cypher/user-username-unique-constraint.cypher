@@ -1,0 +1,1 @@
+create constraint uniqueUsernameForUsers if not exists for (u:User) require u.username is unique

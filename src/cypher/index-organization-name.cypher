@@ -1,0 +1,1 @@
+create index organization_index_name if not exists for (o:Organization) on (o.name);
