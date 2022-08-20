@@ -1,7 +1,7 @@
 const logger = require('../../logger/index')
-const neo4j = require('../../neo4j')
+const neo4j = require('../../db/neo4j')
 const errorHandler = require('../../middleware/neo4j-error-handler')
-const cypher = require('../../cypher/index')
+const cypher = require('../../db/cypher/index')
 
 module.exports = {
     Query: {

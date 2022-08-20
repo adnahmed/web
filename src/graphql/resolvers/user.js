@@ -1,7 +1,7 @@
 const logger = require('../../logger/index')
-const neo4j = require('../../neo4j')
+const neo4j = require('../../db/neo4j')
 const neo4jErrorHandler = require('../../middleware/neo4j-error-handler');
-const cypher = require('../../cypher/index')
+const cypher = require('../../db/cypher/index')
 const bcrypt = require('bcrypt')
 const config = require('../../config')
 const jwt = require('jsonwebtoken')
@@ -14,7 +14,7 @@ module.exports = {
                 return await logIn(user, args.password, context);
             } catch (err) {
                 if (err instanceof UsernameError)
-                    return  new ErrorResponse(err);
+                    return new ErrorResponse(err);
                 return neo4jErrorHandler(err);
             }
         },
@@ -24,7 +24,7 @@ module.exports = {
                 return await logIn(user, args.password, context);
             } catch (err) {
                 if (err instanceof EmailError)
-                    return  new ErrorResponse(err);
+                    return new ErrorResponse(err);
                 return neo4jErrorHandler(err);
             }
         },
@@ -52,14 +52,15 @@ module.exports = {
                 args.user.password = await hashValue(args.user.password)
                 await checkExistingUsername(args.user.username, true)
                 await neo4j.write(cypher(`create-user`), args.user)
-                await neo4j.write(
-                    cypher(`create-role-user-relationship`),
-                    args.user
-                )
-                await neo4j.write(
-                    cypher(`create-organization-user-relationship`),
-                    { username: args.user.username, organization: args.user.organization }
-                )
+                await neo4j.batch([
+                    {
+                        query: cypher(`create-role-user-relationship`),
+                        params: args.user
+                    }, {
+                        query: cypher(`create-organization-user-relationship`),
+                        params: { username: args.user.username, organization: args.user.organization }
+                    }
+                ]);
                 return await prepareAuthenticationResponse(
                     args.user,
                     'Registeration Successful'
