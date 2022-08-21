@@ -1,6 +1,7 @@
 {
     "scripts": {
-        "go": "node server.js",
+        "debug": "node server.js",
+        "start": "pm2 start server.js",
         "test": "jest"
     },
     "dependencies": {
@@ -26,6 +27,7 @@
         "morgan": "^1.10.0",
         "neo4j-driver": "^4.4.6",
         "neode": "^0.4.8",
+        "pm2": "^5.2.0",
         "redis": "^4.2.0",
         "send": "^0.18.0",
         "winston": "^3.7.2"
