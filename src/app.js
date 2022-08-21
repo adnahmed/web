@@ -13,5 +13,6 @@ app.use(morgan('combined'));
     apolloServer.applyMiddleware({ app });
 })();
 app.use('/exam', require('./files/exam'));
+app.use('/lk_webhooks', require('./livekit/webhooks'));
 module.exports = app;
 

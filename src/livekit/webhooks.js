@@ -1,4 +1,5 @@
-const app = require('../app');
+const express = require("express");
+const router = express.Router();
 const config = require('../config').livekit;
 const { WebhookReceiver } = require("livekit-server-sdk");
 const receiver = new WebhookReceiver(config.apiKey, config.secretKey);
@@ -6,8 +7,23 @@ const receiver = new WebhookReceiver(config.apiKey, config.secretKey);
 // In order to use the validator, WebhookReceiver must have access to the raw POSTed string (instead of a parsed JSON object)
 // if you are using express middleware, ensure that `express.raw` is used for the webhook endpoint
 // router.use('/webhook/path', express.raw());
+router.use('/', express.raw());
 
-app.post('/webhook-endpoint', (req, res) => {
+router.post('/', (req, res) => {
   // event is a WebhookEvent object
   const event = receiver.receive(req.body, req.get('Authorization'));
+  /*
+  room_started,
+  room_finished,
+  participant_joined,
+  participant_left,
+  recording_started,
+  recording_finished,
+  track_published,
+  track_unpublished,
+  egress_started,
+  egress_ended
+  */
 });
+
+module.exports = router;
