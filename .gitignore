@@ -4,3 +4,4 @@ config.js
 .env
 *-log-*.log
 src/files/blobs
+coverage/
