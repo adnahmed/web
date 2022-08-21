@@ -34,7 +34,7 @@ type Query {
 input UserRegisterationInput {
     username: String!, 
     password: String!, 
-    role: String!, 
+    role: Role!, 
     prefix: String, 
     givenName:String!, 
     middleName:String, 
