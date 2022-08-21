@@ -25,6 +25,7 @@
         "livekit-server-sdk": "^1.0.1",
         "morgan": "^1.10.0",
         "neo4j-driver": "^4.4.6",
+        "neode": "^0.4.8",
         "redis": "^4.2.0",
         "send": "^0.18.0",
         "winston": "^3.7.2"

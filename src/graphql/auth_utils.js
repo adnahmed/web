@@ -1,5 +1,9 @@
-const neo4j = require('../neo4j')
-const cypher = require('../cypher/index')
+const neo4j = require('../db/neo4j')
+const cypher = require('../db/cypher/index')
+const jwt = require('jsonwebtoken')
+const config = require('../config')
+const logger = require("../logger")
+
 async function getUserRole(username) {
     const roleQueryRespone = await neo4j
         .read(cypher(`get-user-role`), { username: username })
@@ -8,7 +12,7 @@ async function getUserRole(username) {
     throw new RoleFetchError(username);
 
 }
-async function checkExistingEmail(email, newUser) {
+async function checkExistingEmail(email) {
     const userQueryResponse = await neo4j.read(cypher('get-user-by-email'), {
         email: email,
     })
@@ -18,15 +22,15 @@ async function checkExistingEmail(email, newUser) {
         return userQueryResponse.records[0].get(0).properties
     }
 }
-async function checkExistingUsername(username, newUser) {
+async function checkExistingUsername(username, creatingNewUser) {
     const userQueryResponse = await neo4j.read(cypher('get-user-by-username'), {
         username: username,
     })
     if (userQueryResponse.records.length == 0) {
-        if (!newUser)
+        if (!creatingNewUser)
             throw new UsernameError(UsernameError.DOES_NOT_EXISTS, username)
     } else {
-        if (newUser)
+        if (creatingNewUser)
             throw new UsernameError(UsernameError.ALREADY_EXISTS, username)
         return userQueryResponse.records[0].get(0).properties
     }
@@ -70,13 +74,13 @@ async function getUser(req) {
         return new { status: false, user: null }
     }
 
-    const payload = await jwt.verify(req.headers.authorization, secret)
+    const payload = await jwt.verify(req.headers.authorization, config.secret)
     if (!payload.sub || !payload.role){
         logger.warn(`${req.ip}: Malformed JWT Token, ${req.headers.authorization}`);
         return { status: false, user: null };
     } 
     // TODO: Use Redis Cache here to fetch user for username
-    const user = await checkExistingUsername(username, false);
+    const user = await checkExistingUsername(payload.sub, { creatingNewUser: false });
     user.role = await getUserRole (user.username);
     return { status: true, user: user };
 }
