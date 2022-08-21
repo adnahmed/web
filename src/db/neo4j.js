@@ -1,7 +1,6 @@
 const logger = require('../logger');
 const neode = require("neode");
 const instance = neode.fromEnv();
-
 module.exports = {
     read: (cypher, params = {}) => {
         return instance.cypher(cypher, params)
@@ -13,11 +12,14 @@ module.exports = {
             })
     },
     write: (cypher, params = {}) => {
-        return instance.cypher(cypher, params)
+        const session = instance.writeSession(process.env.NEO4J_DATABASE);
+        session.run(cypher, params)
             .then((res) => {
+                session.close();
                 return res
             })
             .catch((e) => {
+                session.close();
                 throw e
             })
     },
@@ -30,4 +32,5 @@ module.exports = {
                 throw e
             })
     }
+    , instance
 }
