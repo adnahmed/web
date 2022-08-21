@@ -1,7 +1,7 @@
 const { getUser, Roles } = require('../graphql/auth_utils');
 const express = require('express');
-const neo4j = require('../neo4j');
-const cypher = require('../cypher');
+const neo4j = require('../db/neo4j');
+const cypher = require('../db/cypher');
 const router = express.Router();
 const send = require('send');
 const formidable = require('formidable');
