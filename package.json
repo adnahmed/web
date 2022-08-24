@@ -2,7 +2,8 @@
     "scripts": {
         "debug": "node server.js",
         "start": "pm2 start server.js",
-        "test": "jest"
+        "test": "jest",
+        "postinstall": "patch-package"
     },
     "dependencies": {
         "@graphql-tools/load-files": "^6.5.4",
@@ -29,6 +30,7 @@
         "morgan": "^1.10.0",
         "neo4j-driver": "^4.4.6",
         "neode": "^0.4.8",
+        "patch-package": "^6.4.7",
         "pm2": "^5.2.0",
         "redis": "^4.2.0",
         "send": "^0.18.0",
