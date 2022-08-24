@@ -10,7 +10,7 @@ const redisClient = redis.createClient({
     password: config.password,
     socket: {
         host: config.REDIS_HOST,
-        port: 6379,
+        port: config.REDIS_PORT,
         reconnectStrategy: (numberRetries) => {
             if (numberRetries > config.MAX_CONNECTION_RETRY) {
                 // End reconnecting with built in error
@@ -34,10 +34,9 @@ redisClient.on('error', (err) => {
     logger.warn(err.message)
 });
 
-var opts;
 function connectToRedis() {
     redisClient.connect().then(() => {
-        opts = {
+        var opts = {
             // Basic options
             storeClient: redisClient,
             points: 5, // Number of points
