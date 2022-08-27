@@ -2,6 +2,7 @@
     "scripts": {
         "debug": "node server.js",
         "start": "pm2 start server.js",
+	"stop": "pm2 stop server",
         "test": "jest",
         "postinstall": "patch-package"
     },
