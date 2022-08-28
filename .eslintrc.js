@@ -9,5 +9,8 @@ module.exports = {
         "ecmaVersion": "latest"
     },
     "rules": {
+        "globals": {
+            "process": "readonly"
+        }
     }
 }
