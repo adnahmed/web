@@ -1,8 +1,8 @@
-switch (process.env.NODE_ENV) {
-    case 'DEBUG':
+switch (process.env.NODE_ENV.toLowerCase()) {
+    case 'debug':
         module.exports = require('./config.dev')
         break
-    case 'PROD':
+    case 'production':
         module.exports = require('./config.prod')
         break
 }
