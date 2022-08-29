@@ -14,10 +14,14 @@ enum Role {
     examinee
 }
 
-type AuthenticationResponse {
+type QueryResponse {
     code: Int!
     message: String!
     success: Boolean!
+}
+
+type AuthenticationResponse {
+    queryResponse: QueryResponse
     token: String
     user: User
 }
@@ -45,4 +49,5 @@ input UserRegisterationInput {
 
 type Mutation {
     register(user: UserRegisterationInput!): AuthenticationResponse!
+    unregister(id: UUID!): QueryResponse
 }
