@@ -1,5 +1,5 @@
 const { createLogger, format, transports } = require('winston')
-const winston = require('winston/lib/winston/config')
+const winston = require('winston')
 const { errors, splat, combine, timestamp, label, printf, json } = format
 const loggerOptions = {
     level: 'info',
@@ -24,11 +24,10 @@ const loggerOptions = {
         new transports.File({ filename: '../logs/rps-log-combined.log' }),
     ],
 }
+const logger = createLogger(loggerOptions)
 if (process.env.NODE_ENV != "production") {
-    logger.add(winston.transports.Console({
+    logger.add(new winston.transports.Console({
         format: winston.format.simple(),
     }))
 }
-const logger = createLogger(loggerOptions)
-
 module.exports = logger
