@@ -1,6 +1,8 @@
 const logger = require('../logger');
 const neode = require("neode");
-const instance = neode.fromEnv();
+const config = require("../config").neo4j;
+const instance = neode.fromEnv(config.path);
+
 module.exports = {
     read: (cypher, params = {}) => {
         return instance.cypher(cypher, params)
