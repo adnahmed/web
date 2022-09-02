@@ -2,11 +2,12 @@
     "scripts": {
         "debug": "node server.js",
         "start": "pm2 start server.js",
-	"stop": "pm2 stop server",
+        "stop": "pm2 stop server",
         "test": "jest",
         "postinstall": "patch-package"
     },
     "dependencies": {
+        "@godaddy/terminus": "^4.11.2",
         "@graphql-tools/load-files": "^6.5.4",
         "@graphql-tools/merge": "^8.2.14",
         "@grpc/grpc-js": "^1.6.7",
