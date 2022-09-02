@@ -1,30 +1,18 @@
-const { setupDB } = require('../../utils/context')
+const { setupDB, api } = require('../../utils/context')
 const { gql, request } = require('graphql-request')
 const config = require('../../../src/config').graphql
 
 describe('Registeration Tests', () => {
+    beforeAll(() => {
+        api()
+    })
     beforeEach(() => {
         setupDB()
     })
 
     test('Register Administrator', async () => {
-        const userDetails = gql`
-            {
-                fragment
-                UserDetails
-                on
-                User {
-                    id
-                    prefix
-                    givenName
-                    middleName
-                    lastName
-                    role
-                }
-            }`
-
-        const register = userDetails + gql`
-        {
+     
+        const register = gql`
             mutation Register($user: UserRegisterationInput!) {
             register(user: $user) {
                 code
@@ -32,10 +20,14 @@ describe('Registeration Tests', () => {
                 message
                 success
                 user {
-                    ...UserDetails
+                   id
+                    prefix
+                    givenName
+                    middleName
+                    lastName
+                    role 
                 }
             }
-        }
         }`
         const data = await request(config.endpoint, register, {
             user: {

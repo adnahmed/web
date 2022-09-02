@@ -8,5 +8,8 @@ module.exports = {
             case "false":
                 neo4j.write(cypher("delete-all-nodes-and-relationships"))
         }
+    },
+    api: () => {
+        require('../../server');
     }
 }
