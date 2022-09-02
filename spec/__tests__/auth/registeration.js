@@ -42,9 +42,9 @@ describe('Registeration Tests', () => {
                 organization: "organization"
             }
         })
-        expect(data).toHaveProperty('token')
-        expect(data).toHaveProperty('user')
-        expect(data).toMatchObject({
+        expect(data).toHaveProperty('register.token')
+        expect(data).toHaveProperty('register.user')
+        expect(data.register).toMatchObject({
             code: 200,
             message: "Registeration Successful",
             success: true,
