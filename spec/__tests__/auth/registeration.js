@@ -9,10 +9,7 @@ describe('Registeration Tests', () => {
     beforeEach(() => {
         setupDB()
     })
-
-    test('Register Administrator', async () => {
-     
-        const register = gql`
+    const register = gql`
             mutation Register($user: UserRegisterationInput!) {
             register(user: $user) {
                 code
@@ -29,8 +26,7 @@ describe('Registeration Tests', () => {
                 }
             }
         }`
-        const data = await request(config.endpoint, register, {
-            user: {
+    const user = {
                 username: "username",
                 password: "password",
                 role: "administrator",
@@ -41,13 +37,25 @@ describe('Registeration Tests', () => {
                 email: "address@domain.com",
                 organization: "organization"
             }
-        })
+
+    test('Register Administrator', async () => {
+        const data = await request(config.endpoint, register, { user })
         expect(data).toHaveProperty('register.token')
         expect(data).toHaveProperty('register.user')
         expect(data.register).toMatchObject({
             code: 200,
             message: "Registeration Successful",
             success: true,
+        })
+    })
+
+    it('fails to register with same username already registered.', async () => {
+        const newUser = await request(config.endpoint, register, { user }) // New Registeration
+        const data = await request(config.endpoint, register, { user })
+        expect(data.register).toMatchObject({
+            code: 403,
+            message: `User already exists: username: ${user.username}, email: ${user.email}`,
+            success: false,
         })
     })
 })
