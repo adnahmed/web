@@ -5,7 +5,7 @@ const cypher = require('../../db/cypher/index')
 const bcrypt = require('bcrypt')
 const config = require('../../config')
 const jwt = require('jsonwebtoken')
-const { RoleFetchError, UsernameError, checkExistingUsername, getUserRole, ErrorResponse, EmailError, checkExistingEmail } = require('../auth_utils');
+const { RoleFetchError, RegisterationError, checkExisting, getUserRole, ErrorResponse, EmailError, checkExistingEmail } = require('../auth_utils');
 const { instance } = require('../../db/neo4j');
 module.exports = {
     Query: {
@@ -51,17 +51,7 @@ module.exports = {
 
             try {
                 args.user.password = await hashValue(args.user.password)
-                // await checkExistingUsername(args.user.username, true)
-                // await neo4j.write(cypher(`create-user`), args.user)
-                // await neo4j.batch([
-                //     {
-                //         query: cypher(`create-role-user-relationship`),
-                //         params: args.user
-                //     }, {
-                //         query: cypher(`create-organization-user-relationship`),
-                //         params: { username: args.user.username, organization: args.user.organization }
-                //     }
-                // ]);
+                await checkExisting(args.user)
                 const user = await instance.create('User', args.user)
                 const org = await instance.create('Organization', {name: args.user.organization})
                 await user.relateTo(org, 'belongs_to')
@@ -74,12 +64,7 @@ module.exports = {
                 )
             } catch (err) {
                 logger.warn(`${context.req.ip}: ${err.message}`);
-                if (
-                    err instanceof HashError ||
-                    err instanceof JWTSignError ||
-                    err instanceof UsernameError
-                ) return new ErrorResponse(err);
-                else return neo4jErrorHandler(err)
+                return new ErrorResponse(err);
             }
         },
     },

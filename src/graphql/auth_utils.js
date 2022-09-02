@@ -3,6 +3,7 @@ const cypher = require('../db/cypher/index')
 const jwt = require('jsonwebtoken')
 const config = require('../config')
 const logger = require("../logger")
+const { instance } = require('../db/neo4j')
 
 async function getUserRole(username) {
     const roleQueryRespone = await neo4j
@@ -13,6 +14,7 @@ async function getUserRole(username) {
 
 }
 async function checkExistingEmail(email) {
+
     const userQueryResponse = await neo4j.read(cypher('get-user-by-email'), {
         email: email,
     })
@@ -22,30 +24,24 @@ async function checkExistingEmail(email) {
         return userQueryResponse.records[0].get(0).properties
     }
 }
-async function checkExistingUsername(username, creatingNewUser) {
-    const userQueryResponse = await neo4j.read(cypher('get-user-by-username'), {
-        username: username,
+
+async function checkExisting(user) {
+    const userExists = await instance.first('User',
+    {
+        username: user.username,
+        email: user.email,
     })
-    if (userQueryResponse.records.length == 0) {
-        if (!creatingNewUser)
-            throw new UsernameError(UsernameError.DOES_NOT_EXISTS, username)
-    } else {
-        if (creatingNewUser)
-            throw new UsernameError(UsernameError.ALREADY_EXISTS, username)
-        return userQueryResponse.records[0].get(0).properties
+    if (userExists) {
+        throw new RegisterationError(user.username, user.email)
     }
 }
 
-class UsernameError extends Error {
+class RegisterationError extends Error {
     static ALREADY_EXISTS = 0
-    static DOES_NOT_EXISTS = 1
-    constructor(type, username) {
+    constructor(username, email) {
         super()
         this.code = 403
-        if (type == UsernameError.ALREADY_EXISTS)
-            this.message = `Username already exists: ${username}`
-        else if (type == UsernameError.DOES_NOT_EXISTS)
-            this.message = `Username does not exists: ${username}`
+        this.message = `User already exists: username: ${username}, email: ${email}`
     }
 }
 class EmailError extends Error {
@@ -92,9 +88,9 @@ const Roles = {
 };
 
 module.exports = { 
-    UsernameError, 
+    RegisterationError, 
     ErrorResponse, 
-    checkExistingUsername, 
+    checkExisting,
     getUserRole, 
     RoleFetchError,
     checkExistingEmail,
