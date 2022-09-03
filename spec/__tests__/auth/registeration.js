@@ -72,7 +72,7 @@ describe('Registeration Tests', () => {
         })
         const userWithSameEmail = {
             ...user,
-            username: 'other.username',
+            username: 'otherusername',
         }
         const dataSameEmail = await request(config.endpoint, register, {
             user: userWithSameEmail,
@@ -98,5 +98,27 @@ describe('Registeration Tests', () => {
                 },
             })
         }
+    })
+
+    it('fails to register with invalid input', async () => {
+        const invalidUser = {
+            username: 'l337_P4N$A',
+            password: 'password',
+            role: 'administrator',
+            prefix: 'K3.',
+            givenName: 'H4CK366',
+            middleName: 'M1D',
+            lastName: 's',
+            email: 'add223.232@d.com',
+            organization: 'FUCKS',
+        }
+        const data = await request(config.endpoint, register, {
+            user: invalidUser,
+        })
+        expect(data.register).toMatchObject({
+            code: 400,
+            message: `Profanity found in organization: ${invalidUser.organization}\n\"username\" must only contain alpha-numeric characters\n`,
+            success: false,
+        })
     })
 })
