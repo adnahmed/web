@@ -22,7 +22,7 @@ class AuthenticationError extends Error {
     constructor() {
         super()
         this.code = 403
-        this.message = "Invalid Email or username provided."
+        this.message = "Invalid Email or Username provided."
     }
 }
 class ErrorResponse {

@@ -100,6 +100,33 @@ describe('Login Tests', () => {
             success: false,
         })
     })
+
+    it('fails on invalid email/username.', async () => {
+        const usernameLoginData = await request(
+            config.endpoint,
+            loginUsername,
+            {
+                username: 'invalidUsername',
+                password: user.password,
+            }
+        )
+        expect(usernameLoginData.logInUsername).toMatchObject({
+            code: 403,
+            message: 'Invalid Email or Username provided.',
+            success: false,
+        })
+        
+        const emailLoginData = await request(config.endpoint, loginEmail, {
+            email: 'invalidEmail@dom.com',
+            password: user.password,
+        })
+
+        expect(emailLoginData.logInEmail).toMatchObject({
+            code: 403,
+            message: 'Invalid Email or Username provided.',
+            success: false,
+        })
+    })
 })
 
 async function registerFakeAccount() {
