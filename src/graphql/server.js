@@ -21,7 +21,6 @@ const server = new ApolloServer({
         ...scalarTypeDefs,
     ],
     csrfPrevention: true,
-    // TODO: Add Proper Error Handling.
     cache: 'bounded',
     context: async ({ req }) => {
         try {

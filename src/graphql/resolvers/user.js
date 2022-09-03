@@ -32,18 +32,6 @@ module.exports = {
     },
     Mutation: {
         async register(parent, args, context) {
-            /********************** */
-            /*
-            const rolesAllowed = ['administrator', 'examinee', 'proctor']
-            if (!rolesAllowed.includes(args.user.role))
-                return {
-                    code: 400,
-                    message: `Unknown Role provided. Must be one of: ${rolesAllowed}`,
-                    success: false,
-                }
-                */
-            /********************** */
-
             /* Queries expect parameter and throw error for null */
             args.user.prefix = args.user.prefix || ''
             args.user.middleName = args.user.middleName || ''

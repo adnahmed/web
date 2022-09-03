@@ -26,11 +26,7 @@ async function checkExistingEmail(email) {
 }
 
 async function checkExisting(user) {
-    const userExists = await instance.first('User',
-    {
-        username: user.username,
-        email: user.email,
-    })
+    const userExists = await instance.first('User', { username: user.username }) || await instance.first('User', { email: user.email })
     if (userExists) {
         throw new RegisterationError(user.username, user.email)
     }
