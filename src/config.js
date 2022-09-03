@@ -1,3 +1,4 @@
+require('dotenv').config()
 switch (process.env.NODE_ENV.toLowerCase()) {
     case 'production':
         module.exports = require('./config.prod')
