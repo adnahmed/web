@@ -17,8 +17,19 @@ describe('Login Tests', () => {
         setupDB()
         await registerFakeAccount()
     })
-
-    test('Login User', async () => {
+    const loginEmail = gql`
+            query login($email: EmailAddress!, $password: String!) {
+            logInEmail(email: $email, password: $password) {
+                    code
+                    message
+                    success
+                    token
+                    user {
+                        id
+                    }
+                }
+            }
+        `
         const loginUsername = gql`
             query login($username: String!, $password: String!) {
                 logInUsername(username: $username, password: $password) {
@@ -32,6 +43,8 @@ describe('Login Tests', () => {
                 }
             }
         `
+    test('Login User', async () => {
+        
         const usernameLoginData = await request(
             config.endpoint,
             loginUsername,
@@ -48,19 +61,7 @@ describe('Login Tests', () => {
             success: true,
         })
 
-        const loginEmail = gql`
-            query login($email: EmailAddress!, $password: String!) {
-            logInEmail(email: $email, password: $password) {
-                    code
-                    message
-                    success
-                    token
-                    user {
-                        id
-                    }
-                }
-            }
-        `
+        
         const emailLoginData = await request(config.endpoint, loginEmail, {
             email: user.email,
             password: user.password,
@@ -71,6 +72,32 @@ describe('Login Tests', () => {
             code: 200,
             message: 'Login Successful',
             success: true,
+        })
+    })
+    it('fails on invalid password.', async () => {
+        const usernameLoginData = await request(
+            config.endpoint,
+            loginUsername,
+            {
+                username: user.username,
+                password: 'invalidPassword',
+            }
+        )
+        expect(usernameLoginData.logInUsername).toMatchObject({
+            code: 403,
+            message: 'Invalid Password Provided.',
+            success: false,
+        })
+        
+        const emailLoginData = await request(config.endpoint, loginEmail, {
+            email: user.email,
+            password: 'invalidPassword',
+        })
+
+        expect(emailLoginData.logInEmail).toMatchObject({
+            code: 403,
+            message: 'Invalid Password Provided.',
+            success: false,
         })
     })
 })
