@@ -121,4 +121,23 @@ describe('Registeration Tests', () => {
             success: false,
         })
     })
+
+    it('registers with minimal inputs required for user', async () => {
+    const minimalUser = {
+        username: 'username',
+        password: 'password',
+        role: 'administrator',
+        givenName: 'givenName',
+        email: 'address@domain.com',
+        organization: 'organization',
+    }
+        const data = await request(config.endpoint, register, { user: minimalUser })
+        expect(data).toHaveProperty('register.token')
+        expect(data).toHaveProperty('register.user')
+        expect(data.register).toMatchObject({
+            code: 200,
+            message: 'Registeration Successful',
+            success: true,
+        })
+    })
 })

@@ -24,11 +24,22 @@ module.exports = {
         type: 'string',
         allow: ['administrator', 'proctor', 'examinee']
     },
-    prefix: 'string',
-    givenName: 'string',
-    middleName: 'string',
-    lastName: 'string',
-
+    prefix: {
+        type: 'string',
+        optional: true,
+    },
+    givenName: {
+        type: 'string',
+        required: true,
+    },
+    middleName: {
+        type: 'string',
+        optional: true,
+    },
+    lastName: {
+        type: 'string',
+        optional: true,
+    },
     belongs_to: {
         type: 'relationship',
         relationship: 'BELONGS_TO',

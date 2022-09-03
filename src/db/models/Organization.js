@@ -5,11 +5,12 @@ module.exports = {
     id: {
         primary: true,
         type: 'uuid',
-        required: 'true',
+        required: true,
     },
     name: {
         type: 'String',
-        unique: 'true'
+        unique: 'true',
+        required: true
     },
     createdAt: {
         type: 'datetime',

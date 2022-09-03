@@ -36,11 +36,6 @@ module.exports = {
     },
     Mutation: {
         async register(parent, args, context) {
-            /* Queries expect parameter and throw error for null */
-            args.user.prefix = args.user.prefix || ''
-            args.user.middleName = args.user.middleName || ''
-            args.user.lastName = args.user.lastName || ''
-
             try {
                 args.user.password = await hashValue(args.user.password)
                 validateUser(args.user)
@@ -70,6 +65,7 @@ function validateUser(user) {
         .keys({
             username: Joi.string().alphanum().min(3).required(),
             email: Joi.string().email({ minDomainSegments: 2 }),
+            createdAt: Joi.forbidden(),
         })
         .with('username', 'email')
 
