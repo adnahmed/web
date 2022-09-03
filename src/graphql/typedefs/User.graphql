@@ -6,6 +6,7 @@ type User {
     lastName: String
     email: EmailAddress!
     role: Role!
+    pictures: [UUID!]!
 }
 
 enum Role {

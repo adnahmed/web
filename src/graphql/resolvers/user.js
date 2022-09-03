@@ -10,7 +10,7 @@ const {
     RegisterationError,
     AuthenticationError
 } = require('../auth_utils')
-const { instance } = require('../../db/neo4j')
+const { instance, read } = require('../../db/neo4j')
 module.exports = {
     Query: {
         async logInUsername(parent, args, context) {
@@ -119,7 +119,13 @@ async function prepareAuthenticationResponse(user, authMessage) {
         sub: user.username,
         role: user.role,
     }
-        const token = await jwt.sign(payload, config.secret)
+    const token = await jwt.sign(payload, config.secret)
+    const builder = instance.query();
+    const PictureRecords = await builder.match('p', 'Picture').relationship('belongs_to', 'out').to('u','User').where('u.id', user.id).return('p').execute()
+    user.pictures = []
+    PictureRecords.records.forEach(record => {
+        user.pictures.push(record.get('id'))
+    })
         return {
             code: 200,
             message: authMessage,
