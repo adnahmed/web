@@ -4,7 +4,9 @@ const logger = require("../logger")
 const { instance } = require('../db/neo4j')
 
 async function checkExisting(query) {
-    const user = query.username ? await instance.first('User', { username: query.username }) : null || query.email ? await instance.first('User', { email: query.email }) : null
+    const user = 
+        (query.username ? await instance.first('User', { username: query.username }) : null) || 
+        (query.email ? await instance.first('User', { email: query.email }) : null)
     return user;
 }
 
