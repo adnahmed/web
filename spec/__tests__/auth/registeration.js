@@ -1,4 +1,4 @@
-const { setupDB, api } = require('../../utils/context')
+const { setupDB, api, shutdown } = require('../../utils/context')
 const { gql, request } = require('graphql-request')
 const config = require('../../../src/config').graphql
 
@@ -6,6 +6,12 @@ describe('Registeration Tests', () => {
     beforeAll(() => {
         api()
     })
+
+    afterAll( done => {
+        shutdown()
+        done()
+    })
+
     beforeEach(() => {
         setupDB()
     })
