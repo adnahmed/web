@@ -22,6 +22,7 @@ module.exports = {
     },
     role: {
         type: 'string',
+        allow: ['administrator', 'proctor', 'examinee']
     },
     prefix: 'string',
     givenName: 'string',
