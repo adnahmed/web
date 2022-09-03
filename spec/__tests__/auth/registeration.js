@@ -1,7 +1,7 @@
 const { setupDB, api, shutdown } = require('../../utils/context')
-const { gql, request } = require('graphql-request')
+const { request } = require('graphql-request')
 const config = require('../../../src/config').graphql
-
+const { register, user } = require('../../utils/constants')
 describe('Registeration Tests', () => {
     beforeAll(() => {
         api()
@@ -15,36 +15,7 @@ describe('Registeration Tests', () => {
     beforeEach(() => {
         setupDB()
     })
-    const register = gql`
-        mutation Register($user: UserRegisterationInput!) {
-            register(user: $user) {
-                code
-                token
-                message
-                success
-                user {
-                    id
-                    prefix
-                    givenName
-                    middleName
-                    lastName
-                    role
-                }
-            }
-        }
-    `
-    const user = {
-        username: 'username',
-        password: 'password',
-        role: 'administrator',
-        prefix: ' ',
-        givenName: 'givenName',
-        middleName: 'middleName',
-        lastName: 'lastName',
-        email: 'address@domain.com',
-        organization: 'organization',
-    }
-
+    
     test('Register User', async () => {
         const data = await request(config.endpoint, register, { user })
         expect(data).toHaveProperty('register.token')
