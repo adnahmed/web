@@ -1,5 +1,5 @@
 const { ApolloServer } = require('apollo-server-express')
-const { loadFiles, loadFilesSync } = require('@graphql-tools/load-files')
+const { loadFilesSync } = require('@graphql-tools/load-files')
 const { mergeResolvers } = require('@graphql-tools/merge')
 const { typeDefs: scalarTypeDefs } = require('graphql-scalars')
 const { resolvers: scalarResolvers } = require('graphql-scalars')
@@ -46,7 +46,4 @@ const server = new ApolloServer({
     ],
 })
 
-server.start().then(()=> {
-    server.applyMiddleware({ app: require("../app") })
-})
-
+module.exports = server;
