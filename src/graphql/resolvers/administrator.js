@@ -1,6 +1,5 @@
 const logger = require('../../logger/index')
 const neo4j = require('../../db/neo4j')
-const errorHandler = require('../../middleware/neo4j-error-handler')
 const cypher = require('../../db/cypher/index')
 
 module.exports = {
@@ -20,7 +19,6 @@ module.exports = {
                }
             } catch (err) {
                 logger.warn(`Error Occurred while fetching proctor records: ${err}`);
-                return errorHandler(err);
             }
         }
     }

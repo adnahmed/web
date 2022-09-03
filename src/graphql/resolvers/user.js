@@ -1,11 +1,8 @@
 const logger = require('../../logger/index')
-const neo4j = require('../../db/neo4j')
-const neo4jErrorHandler = require('../../middleware/neo4j-error-handler');
-const cypher = require('../../db/cypher/index')
 const bcrypt = require('bcrypt')
 const config = require('../../config')
 const jwt = require('jsonwebtoken')
-const { RoleFetchError, RegisterationError, checkExisting, getUserRole, ErrorResponse, EmailError, checkExistingEmail } = require('../auth_utils');
+const { RoleFetchError, checkExisting, getUserRole, ErrorResponse, EmailError, checkExistingEmail } = require('../auth_utils');
 const { instance } = require('../../db/neo4j');
 module.exports = {
     Query: {
