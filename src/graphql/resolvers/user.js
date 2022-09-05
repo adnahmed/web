@@ -6,10 +6,10 @@ const config = require('../../config')
 const jwt = require('jsonwebtoken')
 const {
     checkExisting,
-    ErrorResponse,
     RegisterationError,
     AuthenticationError
 } = require('../auth_utils')
+const { ErrorResponse } = require('../utils')
 const { instance, read } = require('../../db/neo4j')
 module.exports = {
     Query: {

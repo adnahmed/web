@@ -25,13 +25,7 @@ class AuthenticationError extends Error {
         this.message = "Invalid Email or Username provided."
     }
 }
-class ErrorResponse {
-    constructor(err) {
-       this.code = err.code
-       this.message = err.message
-       this.success = false 
-    }
-}
+
 async function getUser(req) {
     if (!req.headers.authorization) {
         return new { status: false, user: null }
@@ -51,7 +45,6 @@ async function getUser(req) {
 module.exports = { 
     RegisterationError, 
     AuthenticationError,
-    ErrorResponse, 
     checkExisting,
     getUser,
 }
