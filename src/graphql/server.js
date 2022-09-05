@@ -8,6 +8,7 @@ const depthLimit = require('graphql-depth-limit')
 const path = require('path')
 const logger = require('../logger')
 const { getUser } = require('./auth_utils')
+const { permissions } = require('./accessControl/permissions')
 
 const server = new ApolloServer({
     resolvers: {
@@ -22,6 +23,7 @@ const server = new ApolloServer({
     ],
     csrfPrevention: true,
     cache: 'bounded',
+    middlewares: [permissions],
     context: async ({ req }) => {
         try {
             const { status, user } = await getUser(req)
