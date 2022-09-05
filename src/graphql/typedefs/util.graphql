@@ -1,0 +1,6 @@
+type QueryResponse {
+    code: Int!
+    message: String!
+    success: Boolean!
+}
+

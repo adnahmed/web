@@ -1,0 +1,25 @@
+type Exam {
+    id: UUID!
+    name: String!
+    start: DateTime!
+    end: DateTime!
+    subject: Subject!
+}
+
+type Subject {
+    id: UUID!
+    name: String!
+    meta: String
+}
+
+input CreateExamInput {
+    name: String!
+    start: DateTime!
+    end: DateTime!
+    subject: String!
+    subjectMeta: String
+}
+
+type Mutation {
+    createExam(exam: CreateExamInput): QueryResponse!
+}
