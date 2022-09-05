@@ -1,7 +1,7 @@
 const { setupDB, api, shutdown } = require('../../utils/context')
-const { gql, request } = require('graphql-request')
+const { request } = require('graphql-request')
 const config = require('../../../src/config').graphql
-const { register, user } = require('../../utils/constants')
+const { register, loginEmail, loginUsername, user } = require('../../utils/constants')
 
 describe('Login Tests', () => {
     beforeAll(() => {
@@ -17,32 +17,7 @@ describe('Login Tests', () => {
         setupDB()
         await registerFakeAccount()
     })
-    const loginEmail = gql`
-            query login($email: EmailAddress!, $password: String!) {
-            logInEmail(email: $email, password: $password) {
-                    code
-                    message
-                    success
-                    token
-                    user {
-                        id
-                    }
-                }
-            }
-        `
-        const loginUsername = gql`
-            query login($username: String!, $password: String!) {
-                logInUsername(username: $username, password: $password) {
-                    code
-                    message
-                    success
-                    token
-                    user {
-                        id
-                    }
-                }
-            }
-        `
+    
     test('Login User', async () => {
         
         const usernameLoginData = await request(

@@ -29,7 +29,36 @@ const user = {
     organization: 'organization',
 }
 
+const loginEmail = gql`
+    query login($email: EmailAddress!, $password: String!) {
+        logInEmail(email: $email, password: $password) {
+            code
+            message
+            success
+            token
+            user {
+                id
+            }
+        }
+    }
+`
+const loginUsername = gql`
+    query login($username: String!, $password: String!) {
+        logInUsername(username: $username, password: $password) {
+            code
+            message
+            success
+            token
+            user {
+                id
+            }
+        }
+    }
+`
+
 module.exports = {
     register,
-    user
+    user,
+    loginEmail,
+    loginUsername
 }
