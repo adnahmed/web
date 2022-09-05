@@ -1,35 +1,29 @@
-const { gql, request } = require('graphql-request')
+const { gql } = require('graphql-request')
 
-const userDetails = gql`
-    {
-        fragment
-        UserDetails
-        on
-        User {
-            id
-            prefix
-            givenName
-            middleName
-            lastName
-            role
+const USER_FIELDS = `
+        id
+        prefix
+        givenName
+        middleName
+        lastName
+        role
+`
+
+const register = gql`
+    mutation Register($user: UserRegisterationInput!) {
+        register(user: $user) {
+            queryResponse {
+              code
+              message
+              success
+            }
+            token
+            user {
+              ${USER_FIELDS}
+            }
         }
     }
 `
-const register = gql`
-{
-    mutation Register($user: UserRegisterationInput!) {
-  register(user: $user) {
-    code
-    token
-    message
-    success
-    user {
-        ...UserDetails
-    }
-  }
-}
-}`
-
 const unregister = gql`
 {
     mutation unregister($id: UUID!) {
@@ -43,9 +37,40 @@ const unregister = gql`
 }
 }
 `
+const loginEmail = gql`
+    query login($email: EmailAddress!, $password: String!) {
+        logInEmail(email: $email, password: $password) {
+            queryResponse {
+              code
+              message
+              success
+            }
+            token
+            user {
+              ${USER_FIELDS}
+            }
+        }
+    }
+`
+const loginUsername = gql`
+    query login($username: String!, $password: String!) {
+        logInUsername(username: $username, password: $password) {
+            queryResponse {
+              code
+              message
+              success
+            }
+            token
+            user {
+              ${USER_FIELDS}
+            }
+        }
+    }
+`
 
 module.exports = {
-    userDetails,
     register,
     unregister,
+    loginEmail,
+    loginUsername,
 }

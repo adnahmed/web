@@ -1,7 +1,8 @@
 const { setupDB, api, shutdown } = require('../../utils/context')
 const { request } = require('graphql-request')
 const config = require('../../../src/config').graphql
-const { register, loginEmail, loginUsername, user } = require('../../utils/constants')
+const { register, loginEmail, loginUsername } = require('../../utils/queries')
+const { user } = require('../../utils/constants')
 
 describe('Login Tests', () => {
     beforeAll(() => {
@@ -30,7 +31,7 @@ describe('Login Tests', () => {
         )
         expect(usernameLoginData).toHaveProperty('logInUsername.token')
         expect(usernameLoginData).toHaveProperty('logInUsername.user')
-        expect(usernameLoginData.logInUsername).toMatchObject({
+        expect(usernameLoginData.logInUsername.queryResponse).toMatchObject({
             code: 200,
             message: 'Login Successful',
             success: true,
@@ -43,7 +44,7 @@ describe('Login Tests', () => {
         })
         expect(emailLoginData).toHaveProperty('logInEmail.token')
         expect(emailLoginData).toHaveProperty('logInEmail.user')
-        expect(emailLoginData.logInEmail).toMatchObject({
+        expect(emailLoginData.logInEmail.queryResponse).toMatchObject({
             code: 200,
             message: 'Login Successful',
             success: true,
@@ -58,7 +59,7 @@ describe('Login Tests', () => {
                 password: 'invalidPassword',
             }
         )
-        expect(usernameLoginData.logInUsername).toMatchObject({
+        expect(usernameLoginData.logInUsername.queryResponse).toMatchObject({
             code: 403,
             message: 'Invalid Password Provided.',
             success: false,
@@ -69,7 +70,7 @@ describe('Login Tests', () => {
             password: 'invalidPassword',
         })
 
-        expect(emailLoginData.logInEmail).toMatchObject({
+        expect(emailLoginData.logInEmail.queryResponse).toMatchObject({
             code: 403,
             message: 'Invalid Password Provided.',
             success: false,
@@ -85,7 +86,7 @@ describe('Login Tests', () => {
                 password: user.password,
             }
         )
-        expect(usernameLoginData.logInUsername).toMatchObject({
+        expect(usernameLoginData.logInUsername.queryResponse).toMatchObject({
             code: 403,
             message: 'Invalid Email or Username provided.',
             success: false,
@@ -96,7 +97,7 @@ describe('Login Tests', () => {
             password: user.password,
         })
 
-        expect(emailLoginData.logInEmail).toMatchObject({
+        expect(emailLoginData.logInEmail.queryResponse).toMatchObject({
             code: 403,
             message: 'Invalid Email or Username provided.',
             success: false,

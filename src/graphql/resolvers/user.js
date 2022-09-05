@@ -9,7 +9,7 @@ const {
     RegisterationError,
     AuthenticationError
 } = require('../auth_utils')
-const { ErrorResponse } = require('../utils')
+const { ErrorQueryResponse, OKQueryResponse } = require('../utils')
 const { instance, read } = require('../../db/neo4j')
 module.exports = {
     Query: {
@@ -21,7 +21,7 @@ module.exports = {
                 }
                 return await logIn(user, args.password)
             } catch (err) {
-                return new ErrorResponse(err)
+                return { queryResponse: new ErrorQueryResponse(err) }
             }
         },
         async logInEmail(parent, args, context) {
@@ -32,7 +32,7 @@ module.exports = {
                 }
                 return await logIn(user, args.password)
             } catch (err) {
-                return new ErrorResponse(err)
+                return { queryResponse: new ErrorQueryResponse(err) }
             }
         },
     },
@@ -57,7 +57,7 @@ module.exports = {
                 )
             } catch (err) {
                 logger.warn(`${context.req.ip}: ${err.message}`)
-                return new ErrorResponse(err)
+                return { queryResponse: new ErrorQueryResponse(err) }
             }
         },
     },
@@ -127,8 +127,7 @@ async function prepareAuthenticationResponse(user, authMessage) {
         user.pictures.push(record.get('id'))
     })
         return {
-            code: 200,
-            message: authMessage,
+            queryResponse: new OKQueryResponse(authMessage),
             success: true,
             token: token,
             user: user,

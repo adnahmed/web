@@ -1,7 +1,9 @@
 const { setupDB, api, shutdown } = require('../../utils/context')
 const { request } = require('graphql-request')
 const config = require('../../../src/config').graphql
-const { register, user } = require('../../utils/constants')
+const { user } = require('../../utils/constants')
+const { register } = require('../../utils/queries')
+
 describe('Registeration Tests', () => {
     beforeAll(() => {
         api()
@@ -20,7 +22,7 @@ describe('Registeration Tests', () => {
         const data = await request(config.endpoint, register, { user })
         expect(data).toHaveProperty('register.token')
         expect(data).toHaveProperty('register.user')
-        expect(data.register).toMatchObject({
+        expect(data.register.queryResponse).toMatchObject({
             code: 200,
             message: 'Registeration Successful',
             success: true,
@@ -36,7 +38,7 @@ describe('Registeration Tests', () => {
         const dataSameUsername = await request(config.endpoint, register, {
             user: userWithSameUsername,
         })
-        expect(dataSameUsername.register).toMatchObject({
+        expect(dataSameUsername.register.queryResponse).toMatchObject({
             code: 403,
             message: `User already exists: username: ${user.username}, email: ${userWithSameUsername.email}`,
             success: false,
@@ -48,7 +50,7 @@ describe('Registeration Tests', () => {
         const dataSameEmail = await request(config.endpoint, register, {
             user: userWithSameEmail,
         })
-        expect(dataSameEmail.register).toMatchObject({
+        expect(dataSameEmail.register.queryResponse).toMatchObject({
             code: 403,
             message: `User already exists: username: ${userWithSameEmail.username}, email: ${user.email}`,
             success: false,
@@ -86,7 +88,7 @@ describe('Registeration Tests', () => {
         const data = await request(config.endpoint, register, {
             user: invalidUser,
         })
-        expect(data.register).toMatchObject({
+        expect(data.register.queryResponse).toMatchObject({
             code: 400,
             message: `Profanity found in organization: ${invalidUser.organization}\n\"username\" must only contain alpha-numeric characters\n`,
             success: false,
@@ -105,7 +107,7 @@ describe('Registeration Tests', () => {
         const data = await request(config.endpoint, register, { user: minimalUser })
         expect(data).toHaveProperty('register.token')
         expect(data).toHaveProperty('register.user')
-        expect(data.register).toMatchObject({
+        expect(data.register.queryResponse).toMatchObject({
             code: 200,
             message: 'Registeration Successful',
             success: true,
