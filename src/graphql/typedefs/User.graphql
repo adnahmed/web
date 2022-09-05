@@ -1,5 +1,6 @@
 type User {
     id: UUID!
+    username: String!
     prefix: String
     givenName: String!
     middleName: String
