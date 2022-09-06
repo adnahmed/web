@@ -1,4 +1,4 @@
-const { setupDB, api, shutdown, registerFakeAccount } = require('../../utils/context')
+const { setupDB, api, shutdown, registerFakeAccount, getAuthenticatedAccount } = require('../../utils/context')
 const { request, GraphQLClient } = require('graphql-request')
 const config = require('../../../src/config').graphql
 const { createExam, loginUsername } = require('../../utils/queries')
@@ -21,13 +21,8 @@ describe('Exam Tests', ()=> {
     })
 
     test('Create exam after login from administrator', async ()=> {
-            const loggedInUser = await request(config.endpoint, loginUsername, {
-                username: user.username,
-                password: user.password
-            })
-            const authenticatedClient = new GraphQLClient(config.endpoint)
-            authenticatedClient.setHeader('authorization', loggedInUser.logInUsername.token)
-            const data = await authenticatedClient.request(createExam, { exam })
+           const authenticatedClient = await getAuthenticatedAccount()
+           const data = await authenticatedClient.request(createExam, { exam })
             expect(data.createExam).toMatchObject({
                 code: 200,
                 message: 'Exam Created.',
