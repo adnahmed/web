@@ -17,7 +17,6 @@ input CreateExamInput {
     start: DateTime!
     end: DateTime!
     subject: String!
-    subjectMeta: String
 }
 
 type Mutation {
