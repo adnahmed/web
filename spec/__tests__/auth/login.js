@@ -1,7 +1,7 @@
-const { setupDB, api, shutdown } = require('../../utils/context')
+const { setupDB, api, shutdown, registerFakeAccount } = require('../../utils/context')
 const { request } = require('graphql-request')
 const config = require('../../../src/config').graphql
-const { register, loginEmail, loginUsername } = require('../../utils/queries')
+const { loginEmail, loginUsername } = require('../../utils/queries')
 const { user } = require('../../utils/constants')
 
 describe('Login Tests', () => {
@@ -104,7 +104,3 @@ describe('Login Tests', () => {
         })
     })
 })
-
-async function registerFakeAccount() {
-    await request(config.endpoint, register, { user })
-}

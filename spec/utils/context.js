@@ -1,5 +1,9 @@
 const neo4j = require("../../src/db/neo4j")
 const cypher = require("../../src/db/cypher")
+const { request } = require('graphql-request')
+const { register } = require('../utils/queries')
+const { user } = require('../utils/constants')
+const config = require('../../src/config').graphql
 const graphql = require('../../src/graphql/server')
 var express;
 module.exports = {
@@ -18,5 +22,8 @@ module.exports = {
         graphql.stop().then(() => {
             express.stop()
         })
+    },
+    registerFakeAccount: async () => {
+        await request(config.endpoint, register, { user })
     }
 }

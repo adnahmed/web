@@ -1,5 +1,4 @@
 const { gql } = require('graphql-request')
-
 const USER_FIELDS = `
         id
         prefix
@@ -68,9 +67,20 @@ const loginUsername = gql`
     }
 `
 
+const createExam = gql`
+  mutation newExam($exam: CreateExamInput!) {
+    createExam(exam: $exam) {
+      code
+      message
+      success
+    }
+  }
+`
+
 module.exports = {
     register,
     unregister,
     loginEmail,
     loginUsername,
+    createExam
 }
