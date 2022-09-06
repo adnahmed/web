@@ -10,21 +10,21 @@ const isAuthenticated = rule({ cache: 'contextual' })(
 
 const isAdmin = rule({ cache: 'contextual' })(
     async (parent, args, ctx, info) => {
-        if (ctx.user.role !== 'administrator') return new UnauthroizedError('Administrator level authorization is required.')
+        if (ctx.user.get('role') !== 'administrator') return new UnauthroizedError('Administrator level authorization is required.')
         return true
     },
 )
 
 const isExaminee = rule({ cache: 'contextual' })(
     async (parent, args, ctx, info) => {
-        if(ctx.user.role !== 'examinee') return new UnauthroizedError('Examinee Level authorization is required.')
+        if(ctx.user.get('role') !== 'examinee') return new UnauthroizedError('Examinee Level authorization is required.')
         return true
     },
 )
 
 const isProctor = rule({ cache: 'contextual' })(
     async (parent, args, ctx, info) => {
-        if(ctx.user.role !== 'proctor') return new UnauthroizedError('Proctor Level authorization is required.')
+        if(ctx.user.get('role') !== 'proctor') return new UnauthroizedError('Proctor Level authorization is required.')
         return true
     },
 )
