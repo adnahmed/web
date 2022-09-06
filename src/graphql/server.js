@@ -8,22 +8,30 @@ const depthLimit = require('graphql-depth-limit')
 const path = require('path')
 const logger = require('../logger')
 const { getUser } = require('./auth_utils')
-const { permissions } = require('./accessControl/permissions')
+const permissions = require('./accessControl/permissions')
+const { makeExecutableSchema } = require('@graphql-tools/schema')
+const { applyMiddleware } = require('graphql-middleware')
+
+const typeDefs = [
+    print(loadFilesSync(path.join(__dirname, './typedefs/**/*.graphql'))),
+    ...scalarTypeDefs,
+]
+const resolvers = {
+    ...scalarResolvers,
+    ...mergeResolvers(
+        loadFilesSync(path.join(__dirname, './resolvers/**/*.js'))
+    ),
+}
+
+const schema = applyMiddleware(
+    makeExecutableSchema({ typeDefs, resolvers }),
+    permissions
+)
 
 const server = new ApolloServer({
-    resolvers: {
-        ...scalarResolvers,
-        ...mergeResolvers(
-            loadFilesSync(path.join(__dirname, './resolvers/**/*.js'))
-        ),
-    },
-    typeDefs: [
-        print(loadFilesSync(path.join(__dirname, './typedefs/**/*.graphql'))),
-        ...scalarTypeDefs,
-    ],
+    schema: schema,
     csrfPrevention: true,
     cache: 'bounded',
-    middlewares: [permissions],
     context: async ({ req }) => {
         try {
             const { status, user } = await getUser(req)
@@ -47,4 +55,4 @@ const server = new ApolloServer({
     ],
 })
 
-module.exports = server;
+module.exports = server
