@@ -11,7 +11,7 @@ const { getUser } = require('./auth_utils')
 const permissions = require('./accessControl/permissions')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
 const { applyMiddleware } = require('graphql-middleware')
-const Keyv = require('keyv')
+const cache = require('./cache')
 const { KeyvAdapter } = require('@apollo/utils.keyvadapter')
 const typeDefs = [
     print(loadFilesSync(path.join(__dirname, './typedefs/**/*.graphql'))),
@@ -32,7 +32,7 @@ const schema = applyMiddleware(
 const server = new ApolloServer({
     schema: schema,
     csrfPrevention: true,
-    cache: new KeyvAdapter(new Keyv(`redis://${process.env.REDIS_USERNAME || 'default' }:${process.env.REDIS_PASSWORD || '' }@${process.env.REDIS_HOST || 'localhost' }:${process.env.REDIS_PORT || '6379' }`)),
+    cache: new KeyvAdapter(cache),
     context: async ({ req }) => {
         try {
             const { status, user } = await getUser(req)
