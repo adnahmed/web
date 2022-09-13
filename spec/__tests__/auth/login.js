@@ -1,6 +1,5 @@
 const { setupDB, api, shutdown, registerFakeAccount } = require('../../utils/context')
 const { request } = require('graphql-request')
-const config = require('../../../src/config').graphql
 const { loginEmail, loginUsername } = require('../../utils/queries')
 const { user } = require('../../utils/constants')
 
@@ -15,14 +14,14 @@ describe('Login Tests', () => {
     })
 
     beforeEach(async () => {
-        setupDB()
+        await setupDB()
         await registerFakeAccount()
     })
     
     test('Login User', async () => {
         
         const usernameLoginData = await request(
-            config.endpoint,
+            process.env.GraphQLEndpoint,
             loginUsername,
             {
                 username: user.username,
@@ -38,7 +37,7 @@ describe('Login Tests', () => {
         })
 
         
-        const emailLoginData = await request(config.endpoint, loginEmail, {
+        const emailLoginData = await request(process.env.GraphQLEndpoint, loginEmail, {
             email: user.email,
             password: user.password,
         })
@@ -52,7 +51,7 @@ describe('Login Tests', () => {
     })
     it('fails on invalid password.', async () => {
         const usernameLoginData = await request(
-            config.endpoint,
+            process.env.GraphQLEndpoint,
             loginUsername,
             {
                 username: user.username,
@@ -65,7 +64,7 @@ describe('Login Tests', () => {
             success: false,
         })
         
-        const emailLoginData = await request(config.endpoint, loginEmail, {
+        const emailLoginData = await request(process.env.GraphQLEndpoint, loginEmail, {
             email: user.email,
             password: 'invalidPassword',
         })
@@ -79,7 +78,7 @@ describe('Login Tests', () => {
 
     it('fails on invalid email/username.', async () => {
         const usernameLoginData = await request(
-            config.endpoint,
+            process.env.GraphQLEndpoint,
             loginUsername,
             {
                 username: 'invalidUsername',
@@ -92,7 +91,7 @@ describe('Login Tests', () => {
             success: false,
         })
         
-        const emailLoginData = await request(config.endpoint, loginEmail, {
+        const emailLoginData = await request(process.env.GraphQLEndpoint, loginEmail, {
             email: 'invalidEmail@dom.com',
             password: user.password,
         })

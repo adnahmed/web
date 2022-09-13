@@ -1,6 +1,5 @@
 const { setupDB, api, shutdown, registerFakeAccount, getAuthenticatedAccount } = require('../../utils/context')
 const { request, GraphQLClient } = require('graphql-request')
-const config = require('../../../src/config').graphql
 const { createExam, loginUsername } = require('../../utils/queries')
 const { exam, user } = require('../../utils/constants')
 
@@ -16,7 +15,7 @@ describe('Exam Tests', ()=> {
     })
 
     beforeEach(async () => {
-        setupDB()
+        await setupDB()
         await registerFakeAccount()
     })
 
@@ -32,7 +31,7 @@ describe('Exam Tests', ()=> {
 
     it('fails to create exam when unauthenticated.', async ()=> {
         try {
-            await request(config.endpoint, createExam, { exam: exam })
+            await request(process.env.GraphQLEndpoint, createExam, { exam: exam })
         } catch (err) {
             expect(err.response.errors[0].extensions).toMatchObject({
                 exception: {

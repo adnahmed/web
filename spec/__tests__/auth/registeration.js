@@ -1,6 +1,5 @@
 const { setupDB, api, shutdown } = require('../../utils/context')
 const { request } = require('graphql-request')
-const config = require('../../../src/config').graphql
 const { user } = require('../../utils/constants')
 const { register } = require('../../utils/queries')
 
@@ -14,12 +13,12 @@ describe('Registeration Tests', () => {
         done()
     })
 
-    beforeEach(() => {
-        setupDB()
+    beforeEach(async () => {
+        await setupDB()
     })
     
     test('Register User', async () => {
-        const data = await request(config.endpoint, register, { user })
+        const data = await request(process.env.GraphQLEndpoint, register, { user })
         expect(data).toHaveProperty('register.token')
         expect(data).toHaveProperty('register.user')
         expect(data.register.queryResponse).toMatchObject({
@@ -30,12 +29,12 @@ describe('Registeration Tests', () => {
     })
 
     it('fails to register with same username/email already registered.', async () => {
-        await request(config.endpoint, register, { user }) // New Registeration
+        await request(process.env.GraphQLEndpoint, register, { user }) // New Registeration
         const userWithSameUsername = {
             ...user,
             email: 'different.address@mail.com',
         }
-        const dataSameUsername = await request(config.endpoint, register, {
+        const dataSameUsername = await request(process.env.GraphQLEndpoint, register, {
             user: userWithSameUsername,
         })
         expect(dataSameUsername.register.queryResponse).toMatchObject({
@@ -47,7 +46,7 @@ describe('Registeration Tests', () => {
             ...user,
             username: 'otherusername',
         }
-        const dataSameEmail = await request(config.endpoint, register, {
+        const dataSameEmail = await request(process.env.GraphQLEndpoint, register, {
             user: userWithSameEmail,
         })
         expect(dataSameEmail.register.queryResponse).toMatchObject({
@@ -63,7 +62,7 @@ describe('Registeration Tests', () => {
             role: 'unknown',
         }
         try {
-            await request(config.endpoint, register, { user: fakeRole })
+            await request(process.env.GraphQLEndpoint, register, { user: fakeRole })
         } catch (err) {
             expect(err.response.errors[0]).toMatchObject({
                 extensions: {
@@ -85,7 +84,7 @@ describe('Registeration Tests', () => {
             email: 'add223.232@d.com',
             organization: 'FUCKS',
         }
-        const data = await request(config.endpoint, register, {
+        const data = await request(process.env.GraphQLEndpoint, register, {
             user: invalidUser,
         })
         expect(data.register.queryResponse).toMatchObject({
@@ -104,7 +103,7 @@ describe('Registeration Tests', () => {
         email: 'address@domain.com',
         organization: 'organization',
     }
-        const data = await request(config.endpoint, register, { user: minimalUser })
+        const data = await request(process.env.GraphQLEndpoint, register, { user: minimalUser })
         expect(data).toHaveProperty('register.token')
         expect(data).toHaveProperty('register.user')
         expect(data.register.queryResponse).toMatchObject({
