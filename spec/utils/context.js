@@ -1,16 +1,22 @@
+require('./graphqlEndpoint')
 const neo4j = require("../../src/db/neo4j")
-const cypher = require("../../src/db/cypher")
 const { request, GraphQLClient } = require('graphql-request')
 const { register, loginUsername } = require('../utils/queries')
 const { user } = require('../utils/constants')
-const config = require('../../src/config').graphql
 const graphql = require('../../src/graphql/server')
 const { instance } = require("../../src/db/neo4j")
+const fs = require('fs')
+const path = require('path')
 var express;
 module.exports = {
-    setupDB: () => {
-        instance.schema.drop() // indexes and constraints
-        instance.deleteAll() // labels and relationships
+    setupDB: async () => {
+        const files = fs.readdirSync(path.resolve('src/db/models'))
+        files.forEach(async (file) => {
+            file = file.replace('.js', '')
+            const records = await instance.all(file)
+            if (records.length > 0) 
+                await instance.deleteAll(file)
+        })
     },
     api: () => {
         express = require('../../server')
@@ -21,15 +27,15 @@ module.exports = {
         })
     },
     registerFakeAccount: async () => {
-        await request(config.endpoint, register, { user })
+        await request(process.env.GraphQLEndpoint, register, { user })
     },
     getAuthenticatedAccount: async () => {
-        const loggedInUser = await request(config.endpoint, loginUsername, {
+        const loggedInUser = await request(process.env.GraphQLEndpoint, loginUsername, {
                 username: user.username,
                 password: user.password
             })
-        const authenticatedClient = new GraphQLClient(config.endpoint)
+        const authenticatedClient = new GraphQLClient(process.env.GraphQLEndpoint)
         authenticatedClient.setHeader('authorization', loggedInUser.logInUsername.token)
         return authenticatedClient
-    }
+    },
 }
