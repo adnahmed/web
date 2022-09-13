@@ -89,7 +89,7 @@ describe('Registeration Tests', () => {
         })
         expect(data.register.queryResponse).toMatchObject({
             code: 400,
-            message: `Profanity found in organization: ${invalidUser.organization}\n\"username\" must only contain alpha-numeric characters\n`,
+            message: `Please avoid using using profanity in Organization.\n`,
             success: false,
         })
     })

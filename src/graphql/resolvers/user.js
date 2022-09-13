@@ -74,7 +74,14 @@ function validateUser(user) {
 
     var filter = new Filter()
     var profanityFoundIn = (field, value) => {
-        return `Profanity found in ${field}: ${value}\n`
+        field = field.replace('organization', 'Organization')
+        field = field.replace('givenName', 'Given Name')
+        field = field.replace('lastName', 'Last Name')
+        field = field.replace('middleName', 'Middle Name')
+        field = field.replace('prefix', 'Prefix')
+        field = field.replace('username', 'Username')
+        field = field.replace('email', 'Email Address')
+        return `Please avoid using using profanity in ${field}.\n`
     }
     var errorMessage = ``
 
