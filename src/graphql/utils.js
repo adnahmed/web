@@ -1,8 +1,15 @@
+const { Neo4jError } = require("neo4j-driver")
+
 class ErrorQueryResponse {
     constructor(err) {
-       this.code = err.code
-       this.message = err.message
-       this.success = false 
+       if (err.name === 'Neo4jError') {
+            this.code = 500
+       }
+       else {
+        this.code = err.code
+       }
+        this.message = err.message
+        this.success = false
     }
 }
 
