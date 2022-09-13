@@ -1,6 +1,6 @@
 const logger = require('../logger');
 const neode = require("neode");
-const instance = neode.fromEnv(process.env.NEO4J_PATH || ".neode.env.dev")
+const instance = neode.fromEnv(process.env.NEO4J_PATH)
     .withDirectory(__dirname + '/models')
 
 module.exports = {
