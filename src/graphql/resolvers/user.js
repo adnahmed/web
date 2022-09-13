@@ -64,6 +64,7 @@ module.exports = {
 }
 
 function validateUser(user) {
+    /* Setup */
     const schema = Joi.object()
         .keys({
             username: Joi.string().alphanum().min(3).required(),
@@ -77,26 +78,22 @@ function validateUser(user) {
         return `Profanity found in ${field}: ${value}\n`
     }
     var errorMessage = ``
+
+    /* Operation */
     const result = Joi.validate(
         { username: user.username, email: user.email },
         schema
     )
-    if (filter.isProfane(user.username))
-        errorMessage += profanityFoundIn('username', user.username)
-    if (filter.isProfane(user.prefix))
-        errorMessage += profanityFoundIn('prefix', user.prefix)
-    if (filter.isProfane(user.givenName))
-        errorMessage += profanityFoundIn('givenName', user.givenName)
-    if (filter.isProfane(user.middleName))
-        errorMessage += profanityFoundIn('middleName', user.middleName)
-    if (filter.isProfane(user.lastName))
-        errorMessage += profanityFoundIn('lastName', user.lastName)
-    if (filter.isProfane(user.organization))
-        errorMessage += profanityFoundIn('organization', user.organization)
+    user.keys.forEach((key) => {
+        if(filter.isProfane(user[key]))
+            errorMessage += profanityFoundIn(`${key}`,user[key])
+    })
     if (result.error)
-        result.error.details.forEach((detail) => {
+    result.error.details.forEach((detail) => {
             errorMessage += `${detail.message}\n`
-        })
+    })
+
+    /* Result */
     if (errorMessage.length == 0 && !result.error) return true
     throw new ValidationError(errorMessage)
 }
