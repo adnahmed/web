@@ -1,39 +1,41 @@
 const logger = require('../logger');
 const neode = require("neode");
-const config = require("../config").neo4j;
-const instance = neode.fromEnv(config.path)
+const instance = neode.fromEnv(process.env.NEO4J_PATH || ".neode.env.dev")
     .withDirectory(__dirname + '/models')
 
 module.exports = {
-    read: (cypher, params = {}) => {
-        return instance.cypher(cypher, params)
-            .then((res) => {
-                return res
-            })
-            .catch((e) => {
-                throw e
-            })
+    read: async (cypher, params = {}) => {
+        const session = instance.readSession(process.env.NEO4J_DATABASE)
+        try {
+            const res = await session.run(cypher, params)
+            return res
+        } catch (err) {
+            // TODO: Logging Service
+            logger.error(`${new Date},${err.code},${err.message}`)
+            throw err
+        }
+        finally {
+            session.close()
+        }
     },
-    write: (cypher, params = {}) => {
+    write: async (cypher, params = {}) => {
         const session = instance.writeSession(process.env.NEO4J_DATABASE);
-        session.run(cypher, params)
-            .then((res) => {
-                session.close();
-                return res
-            })
-            .catch((e) => {
-                session.close();
-                throw e
-            })
+        try {
+            const res = await session.run(cypher, params)
+            return res
+        } catch (err) {
+            throw err
+        }
+        finally {
+            session.close()
+        }
     },
-    batch: (queries) => {
-        return instance.batch(queries)
-            .then((res) => {
-                return res
-            })
-            .catch((e) => {
-                throw e
-            })
+    batch: async (queries) => {
+        try {
+            const res = await instance.batch(queries)
+        } catch (err) {
+            throw e
+        }
     }
-    , instance
+    ,instance
 }
