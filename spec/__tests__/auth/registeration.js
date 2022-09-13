@@ -80,7 +80,6 @@ describe('Registeration Tests', () => {
             prefix: 'K3.',
             givenName: 'H4CK366',
             middleName: 'M1D',
-            lastName: 's',
             email: 'add223.232@d.com',
             organization: 'FUCKS',
         }
@@ -89,7 +88,7 @@ describe('Registeration Tests', () => {
         })
         expect(data.register.queryResponse).toMatchObject({
             code: 400,
-            message: `Please avoid using using profanity in Organization.\n`,
+            message: `Please avoid using using profanity in Organization.\n\"username\" must contain only alphanumeric characters`,
             success: false,
         })
     })
