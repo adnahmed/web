@@ -1,5 +1,4 @@
 const { ErrorResponse } = require('../utils')
-const { rule, shield, and, or, not } = require("graphql-shield")
 module.exports = {
     Mutation: {
         createExam: async (parent, args, context) => {

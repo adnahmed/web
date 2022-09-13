@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken')
-const config = require('../config')
 const logger = require("../logger")
 const { instance } = require('../db/neo4j')
 
@@ -30,7 +29,7 @@ async function getUser(req) {
     if (!req.headers.authorization) {
         return new { status: false, user: null }
     }
-    const payload = await jwt.verify(req.headers.authorization, config.secret)
+    const payload = await jwt.verify(req.headers.authorization, process.env.SECRET)
     if (!payload.sub || !payload.role){
         logger.warn(`${req.ip}: Malformed JWT Token, ${req.headers.authorization}`);
         return { status: false, user: null };

@@ -2,7 +2,6 @@ const logger = require('../../logger/index')
 const Filter = require('bad-words')
 const Joi = require('@hapi/joi')
 const bcrypt = require('bcrypt')
-const config = require('../../config')
 const jwt = require('jsonwebtoken')
 const {
     checkExisting,
@@ -39,7 +38,7 @@ module.exports = {
     Mutation: {
         async register(parent, args, context) {
             try {
-                args.user.password = await bcrypt.hash(args.user.password, config.saltRounds)
+                args.user.password = await bcrypt.hash(args.user.password, parseInt(process.env.SALT_ROUNDS))
                 validateUser(args.user)
                 if (await checkExisting(args.user))
                     throw new RegisterationError(args.user.username, args.user.email)
@@ -84,10 +83,10 @@ function validateUser(user) {
         { username: user.username, email: user.email },
         schema
     )
-    user.keys.forEach((key) => {
-        if(filter.isProfane(user[key]))
-            errorMessage += profanityFoundIn(`${key}`,user[key])
-    })
+    for (const [key, value] of Object.entries(user)) {
+        if(filter.isProfane(value))
+            errorMessage += profanityFoundIn(`${key}`, value)
+    }
     if (result.error)
     result.error.details.forEach((detail) => {
             errorMessage += `${detail.message}\n`
@@ -116,7 +115,7 @@ async function prepareAuthenticationResponse(user, authMessage) {
         sub: user.username,
         role: user.role,
     }
-    const token = await jwt.sign(payload, config.secret)
+    const token = await jwt.sign(payload, process.env.SECRET)
     const builder = instance.query();
     const PictureRecords = await builder.match('p', 'Picture').relationship('belongs_to', 'out').to('u','User').where('u.id', user.id).return('p').execute()
     user.pictures = []
