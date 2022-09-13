@@ -1,6 +1,6 @@
 const { shield, and, or, not } = require('graphql-shield');
 const { UnauthroizedError } = require('../utils');
-const { isAuthenticated, isAdmin, isExaminee, isProctor } = require('./rules')
+const { isAuthenticated, isAdmin, isExaminee, isProctor } = require('./authRules')
 
 const permissions = shield({
     Mutation: {

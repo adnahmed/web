@@ -8,7 +8,8 @@ const depthLimit = require('graphql-depth-limit')
 const path = require('path')
 const logger = require('../logger')
 const { getUser } = require('./auth_utils')
-const permissions = require('./accessControl/permissions')
+const authPermissions = require('./accessControl/authPermissions')
+const rateLimitPermissions = require('./accessControl/rateLimitPermissions')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
 const { applyMiddleware } = require('graphql-middleware')
 const cache = require('./cache')
@@ -26,7 +27,8 @@ const resolvers = {
 
 const schema = applyMiddleware(
     makeExecutableSchema({ typeDefs, resolvers }),
-    permissions
+    authPermissions,
+    rateLimitPermissions
 )
 
 const server = new ApolloServer({
