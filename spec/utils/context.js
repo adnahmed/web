@@ -5,15 +5,12 @@ const { register, loginUsername } = require('../utils/queries')
 const { user } = require('../utils/constants')
 const config = require('../../src/config').graphql
 const graphql = require('../../src/graphql/server')
+const { instance } = require("../../src/db/neo4j")
 var express;
 module.exports = {
     setupDB: () => {
-        switch (process.env.NEO4J_ENTERPRISE.toLowerCase()) {
-            case "true":
-                neo4j.write(cypher("create-or-replace-db"))
-            case "false":
-                neo4j.write(cypher("delete-all-nodes-and-relationships"))
-        }
+        instance.schema.drop() // indexes and constraints
+        instance.deleteAll() // labels and relationships
     },
     api: () => {
         express = require('../../server')
