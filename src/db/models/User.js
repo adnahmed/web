@@ -36,7 +36,6 @@ module.exports = {
     prefix: {
         type: 'string',
         optional: true,
-        required: false,
         allow: [''],
         default: () => ''
     },
@@ -48,7 +47,6 @@ module.exports = {
     middleName: {
         type: 'string',
         optional: true,
-        required: false,
         allow: [''],
         default: () => ''
     },
