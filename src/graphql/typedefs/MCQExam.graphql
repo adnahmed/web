@@ -1,0 +1,23 @@
+type MCQExam {
+    id: UUID!
+    questions: [MCQuestion!]!
+}
+
+type MCQuestion {
+    question: String!
+    choices: [MCQChoice!]!
+}
+
+type MCQChoice {
+    id: UUID!
+    statement: String!
+}
+
+type MCQExamResponse {
+    queryResponse: QueryResponse!
+    mcqExam: MCQExam
+}
+
+type Query {
+    getMCQExam(exam: UUID!): MCQExamResponse!
+}

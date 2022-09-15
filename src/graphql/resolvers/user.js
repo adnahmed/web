@@ -131,7 +131,6 @@ async function prepareAuthenticationResponse(user, authMessage) {
     })
         return {
             queryResponse: new OKQueryResponse(authMessage),
-            success: true,
             token: token,
             user: user,
         }

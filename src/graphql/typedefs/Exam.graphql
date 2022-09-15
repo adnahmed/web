@@ -19,6 +19,10 @@ input CreateExamInput {
     subject: String!
 }
 
+type Query {
+    getExam: Exam!
+}
+
 type Mutation {
-    createExam(exam: CreateExamInput): QueryResponse!
+    createExam(exam: CreateExamInput!): QueryResponse!
 }
